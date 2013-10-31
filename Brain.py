@@ -1,4 +1,6 @@
 from pybrain.structure import FeedForwardNetwork, LinearLayer, SigmoidLayer, FullConnection
+from pybrain.datasets import SupervisedDataSet
+from pybrain.supervised.trainers import BackpropTrainer
 
 class Brain:
     def __init__(self):
@@ -20,6 +22,31 @@ class Brain:
         net.addConnection(in_to_hidden)
         net.addConnection(hidden_to_out)
         net.sortModules()
+
+    def _train(self, inputs, outputs, net):
+        if(len(inputs[0]) != 2):
+            raise Exception("Need 2 inputs for each data sample, received " + str(len(inputs[0])))
+        if(len(outputs[0]) != 2):
+            raise Exception("Need 2 outputs for each data sample, received " + str(len(outputs[0])))
+
+        ds = SupervisedDataSet(2,2)
+        for i in range(len(inputs)):
+            ds.addSample(inputs[i],outputs[i])
+
+        trainer = BackpropTrainer(net, ds)
+        return trainer.train()
+
+    def trainAuditory(self, inputs, outputs):
+        return self._train(inputs, outputs, self.auditoryNetwork)
+
+    def trainVocal(self, inputs, outputs):
+        return self._train(inputs, outputs, self.auditoryNetwork)
+
+sampleInputData = ((0,0),(1,0),(0,1),(1,1))
+sampleOutputData = ((0,0),(1,0),(0,1),(1,1))
+
+
+
 """
 x = Brain()
 net = x.auditoryNetwork
