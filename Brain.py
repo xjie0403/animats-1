@@ -1,6 +1,7 @@
-from pybrain.structure import FeedForwardNetwork, LinearLayer, SigmoidLayer, FullConnection
+from pybrain.structure import FeedForwardNetwork, LinearLayer, SigmoidLayer, FullConnection, BiasUnit
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
+from pybrain.tools.shortcuts import buildNetwork
 
 class Brain:
     def __init__(self):
@@ -11,19 +12,18 @@ class Brain:
 
 
     def _initializeNetwork(self, net):
-        inLayer = LinearLayer(2,'in')
-        hiddenLayer = SigmoidLayer(2,'hidden')
-        outLayer = SigmoidLayer(2,'out')
-        net.addInputModule(inLayer)
-        net.addModule(hiddenLayer)
-        net.addOutputModule(outLayer)
-        in_to_hidden = FullConnection(inLayer, hiddenLayer)
-        hidden_to_out = FullConnection(hiddenLayer, outLayer)
-        net.addConnection(in_to_hidden)
-        net.addConnection(hidden_to_out)
+        #bias = BiasUnit('bias')
+        net.addInputModule(LinearLayer(2,'in'))
+        net.addModule(SigmoidLayer(2,'hidden'))
+        net.addOutputModule(SigmoidLayer(2,'out'))
+        net.addModule(BiasUnit('bias'))
+        net.addConnection(FullConnection(net['in'], net['hidden']))
+        net.addConnection(FullConnection(net['hidden'], net['out']))
+        net.addConnection(FullConnection(net['bias'],net['hidden']))
+        net.addConnection(FullConnection(net['bias'],net['out']))
         net.sortModules()
 
-    def _train(self, inputs, outputs, net):
+    def _train(self, inputs, outputs, net, verbose=True):
         if(len(inputs[0]) != 2):
             raise Exception("Need 2 inputs for each data sample, received " + str(len(inputs[0])))
         if(len(outputs[0]) != 2):
@@ -33,19 +33,23 @@ class Brain:
         for i in range(len(inputs)):
             ds.addSample(inputs[i],outputs[i])
 
-        trainer = BackpropTrainer(net, ds)
+        trainer = BackpropTrainer(net, ds, learningrate = 0.01, momentum=0.99, verbose=verbose)
         return trainer.train()
 
-    def trainAuditory(self, inputs, outputs):
-        return self._train(inputs, outputs, self.auditoryNetwork)
+    def trainAuditory(self, inputs, outputs, verbose=False):
+        return self._train(inputs, outputs, self.auditoryNetwork, verbose=verbose)
 
-    def trainVocal(self, inputs, outputs):
-        return self._train(inputs, outputs, self.auditoryNetwork)
+    def trainVocal(self, inputs, outputs, verbose=False):
+        return self._train(inputs, outputs, self.auditoryNetwork, verbose=verbose)
 
 sampleInputData = ((0,0),(1,0),(0,1),(1,1))
 sampleOutputData = ((0,0),(1,0),(0,1),(1,1))
 
+b = Brain()
 
+def testTraining():
+    b = Brain()
+    b.trainAuditory(sampleInputData*100,sampleOutputData*100)
 
 """
 x = Brain()
