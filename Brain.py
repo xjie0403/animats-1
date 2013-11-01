@@ -23,7 +23,7 @@ class Brain:
         net.addConnection(FullConnection(net['bias'],net['out']))
         net.sortModules()
 
-    def _train(self, inputs, outputs, net, verbose=True):
+    def _train(self, inputs, outputs, net, **kwargs):
         if(len(inputs[0]) != 2):
             raise Exception("Need 2 inputs for each data sample, received " + str(len(inputs[0])))
         if(len(outputs[0]) != 2):
@@ -33,14 +33,17 @@ class Brain:
         for i in range(len(inputs)):
             ds.addSample(inputs[i],outputs[i])
 
-        trainer = BackpropTrainer(net, ds, learningrate = 0.01, momentum=0.99, verbose=verbose)
+        trainer = BackpropTrainer(net, ds, **kwargs)
         return trainer.train()
 
-    def trainAuditory(self, inputs, outputs, verbose=False):
-        return self._train(inputs, outputs, self.auditoryNetwork, verbose=verbose)
+    """
+    Most common kwargs are "verbose=True", "momentum=0.99"
+    """
+    def trainAuditory(self, inputs, outputs, **kwargs):
+        return self._train(inputs, outputs, self.auditoryNetwork, **kwargs)
 
-    def trainVocal(self, inputs, outputs, verbose=False):
-        return self._train(inputs, outputs, self.auditoryNetwork, verbose=verbose)
+    def trainVocal(self, inputs, outputs, **kwargs):
+        return self._train(inputs, outputs, self.auditoryNetwork, **kwargs)
 
 sampleInputData = ((0,0),(1,0),(0,1),(1,1))
 sampleOutputData = ((0,0),(1,0),(0,1),(1,1))
