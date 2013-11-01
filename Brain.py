@@ -1,9 +1,10 @@
 from pybrain.structure import FeedForwardNetwork, LinearLayer, SigmoidLayer, FullConnection, BiasUnit
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
+
 from pybrain.tools.shortcuts import buildNetwork
 
-class Brain:
+class BrainController:
     def __init__(self):
         self.auditoryNetwork = FeedForwardNetwork('auditory')
         self._initializeNetwork(self.auditoryNetwork)
@@ -39,19 +40,43 @@ class Brain:
     """
     Most common kwargs are "verbose=True", "momentum=0.99"
     """
-    def trainAuditory(self, inputs, outputs, **kwargs):
-        return self._train(inputs, outputs, self.auditoryNetwork, **kwargs)
 
-    def trainVocal(self, inputs, outputs, **kwargs):
-        return self._train(inputs, outputs, self.auditoryNetwork, **kwargs)
+    def trainAuditory(self, inputs, targets, **kwargs):
+        """
+
+        @param inputs: a list of lists. The inner list of length 2, the inputs to the network (hear1, hear2)
+        @param targets: a list of lists. The inner lists of length 2, the target outputs. (openMouth, hide)
+        @param kwargs:
+        @return:
+        """
+        return self._train(inputs, targets, self.auditoryNetwork, **kwargs)
+
+    def trainVocal(self, inputs, targets, **kwargs):
+        """
+
+        @param inputs: list of training inputs (fed, hurt)
+        @param targets: list of training targets (make1, make2)
+        @param kwargs:
+        @return:
+        """
+        return self._train(inputs, targets, self.auditoryNetwork, **kwargs)
+
+    def activateNetworks(self, inputs):
+        """
+
+        @param inputs: a list of 4 floats (hear1, hear2, fed, hurt)
+        @return: a list of 4 integers (openMouth, hide, make1, make2)
+        """
+        return map(lambda x: int(round(x)), self.auditoryNetwork.activate(inputs[0:2]).tolist() +
+                                            self.vocalNetwork.activate(inputs[2:4]).tolist())
 
 sampleInputData = ((0,0),(1,0),(0,1),(1,1))
 sampleOutputData = ((0,0),(1,0),(0,1),(1,1))
 
-b = Brain()
+b = BrainController()
 
 def testTraining():
-    b = Brain()
+    b = BrainController()
     b.trainAuditory(sampleInputData*100,sampleOutputData*100)
 
 """
