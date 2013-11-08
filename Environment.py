@@ -27,11 +27,11 @@ class XYValues:
 
 class Environment:
 
-    #animats = [Animats() for i in range(1000)]
+    #animats = [[Animats() for i in range(1000)] for j in range(1000)]
 
-    food = [XYValues() for j in range(100)]
+    food = [XYValues() for k in range(100)]
 
-    predators = [XYValues() for k in range(100)]
+    predators = [XYValues() for l in range(100)]
 
 
     def generateRandomFood(self):
