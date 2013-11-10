@@ -11,10 +11,6 @@ class XYValues:
         self.xValue = 0
         self.yValue = 0
 
-    def __init__(self, x, y):
-        self.xValue = x
-        self.yValue = y
-
     def setX(self, x):
         self.xValue = x
 
@@ -31,14 +27,7 @@ class XYValues:
         return "(" + str(self.xValue) + ", " + str(self.yValue) + ")"
 
 
-
 class Environment:
-    #environmentSize = 1000
-    #animats = [[Animat() for i in range(environmentSize)] for j in range(environmentSize)]
-
-    #food = [XYValues() for k in range(100)]
-
-    #predators = [XYValues() for l in range(100)]
 
     def __init__(self):
         self.environmentSize = 64
@@ -51,55 +40,97 @@ class Environment:
                 self.animats[i].append([Animat(), 0, 0])
                 self.soundHistory[i].append([0, 0])
 
-    """
-    def generateRandomFood(self):
+        #initialize food
+        self.food = [XYValues() for k in range(self.environmentSize)]
+        self.generateRandomFood()
 
+        #initialize predator
+        self.predators = [XYValues() for l in range(self.environmentSize)]
+        self.generateRandomPredators()
+
+    def generateRandomFood(self):
         for i in self.food:
-            i.setX(random.randint(0, self.environmentSize))
-            i.setY(random.randint(0, self.environmentSize))
+            i.setX(random.randint(0, self.environmentSize - 1))
+            i.setY(random.randint(0, self.environmentSize -1))
+
+        #set the food in the tiles for the first time
+        self.setFoodInTiles()
 
         print "Here are the coordinates for the food:"
         for j in self.food:
             print j.getCoordinates()
 
-
     def generateRandomPredators(self):
-
         for i in self.predators:
-            i.setX(random.randint(0, self.environmentSize))
-            i.setY(random.randint(0, self.environmentSize))
+            i.setX(random.randint(0, self.environmentSize -1))
+            i.setY(random.randint(0, self.environmentSize -1))
+
+        #set the predators in the tiles fo the first time
+        self.setPredatorsInTiles()
 
         print "Here are the coordinates for the predators:"
         for j in self.predators:
             print j.getCoordinates()
 
-
     def moveFood(self):
+        #remove food in tiles
+        self.removeFoodInTiles()
 
+        #generate new positions in the food list
         for i in self.food:
             i.setX(i.getX() + random.randint(-1, 1))
             i.setY(i.getY() + random.randint(-1, 1))
 
-        #print "Here are the food coordinates after moving:"
-        #for j in self.food:
-        #    print j.getCoordinates()
+        #set new food positions in the tiles
+        self.setFoodInTiles()
+
+        print "Here are the food coordinates after moving:"
+        for k in self.food:
+            print k.getCoordinates()
 
     def movePredators(self):
+        #remove predators in tiles
+        self.removePredatorsInTiles()
+
+        #generate new positions in the predator list
         for i in self.predators:
             i.setX(i.getX() + random.randint(-1, 1))
             i.setY(i.getY() + random.randint(-1, 1))
 
-        #print "Here are the predator coordinates after moving:"
-        #for j in self.predators:
-        #    print j.getCoordinates()
-    """
+        #set new predator positions in the tiles
+        self.setPredatorsInTiles()
+
+        print "Here are the predator coordinates after moving:"
+        for k in self.predators:
+            print k.getCoordinates()
+
+    def removeFoodInTiles(self):
+        for i in self.food:
+            tile = self.animats[i.getX()][i.getY()]
+            tile[1] = 0
+
+    def removePredatorsInTiles(self):
+        for i in self.predators:
+            tile = self.animats[i.getX()][i.getY()]
+            tile[2] = 0
+
+    def setFoodInTiles(self):
+        for i in self.food:
+            tile = self.animats[i.getX()][i.getY()]
+            tile[1] = 1
+
+    def setPredatorsInTiles(self):
+        for i in self.predators:
+            tile = self.animats[i.getX()][i.getY()]
+            tile[2] = 1
+
     def timeCycle(self):
         for i in range(self.environmentSize):
             for j in range(self.environmentSize):
                 tile = self.animats[i][j]
                 if tile[1] == 1 and tile[0].mouthOpen():
                     fed = 1
-                else :
+                else:
                     fed = 0
                 if tile[2] == 1 and (not tile[0].hide()):
                     hurt = 1
@@ -107,6 +138,12 @@ class Environment:
                     hurt = 0
                 sounds = self.soundHistory[i][j]
                 [make1, make2] = tile[0].timeCyle(sounds[0],sounds[1],fed,hurt)
+
+        #move food
+        self.moveFood()
+
+        #move predators
+        self.movePredators()
 
     def getHealthiestNeighbor(self, row, col):
         """
@@ -141,6 +178,11 @@ class Environment:
                     individual.train(*neighbor.getTrainingData())
 
 environment = Environment()
+#environment.generateRandomFood()
+#environment.generateRandomPredators()
+#environment.moveFood()
+#environment.movePredators()
+environment.timeCycle()
 #environment.timeCycle()
 #environment.trainCycle()
 
