@@ -51,7 +51,7 @@ class Animat:
         [openMouth, hide, make1, make2] = self.brain.activateNetworks([hear1, hear2, fed, hurt])
         self.openMouth = openMouth
         self.hide = hide
-
+        return [make1, make2]
 
 
 #a = Animat()

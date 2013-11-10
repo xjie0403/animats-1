@@ -43,10 +43,13 @@ class Environment:
     def __init__(self):
         self.environmentSize = 100
         self.animats = []
+        self.soundHistory = []
         for i in range(self.environmentSize):
+            self.soundHistory.append([]) # [sig1 sig2]
             self.animats.append([])
             for j in range(self.environmentSize):
                 self.animats[i].append([Animat(), 0, 0])
+                self.soundHistory[i].append([0, 0])
 
     """
     def generateRandomFood(self):
@@ -93,7 +96,7 @@ class Environment:
     def timeCycle(self):
         for i in range(self.environmentSize):
             for j in range(self.environmentSize):
-                tile = self.animats[i,j]
+                tile = self.animats[i][j]
                 if tile[1] == 1 and tile[0].mouthOpen():
                     fed = 1
                 else :
@@ -102,7 +105,8 @@ class Environment:
                     hurt = 1
                 else:
                     hurt = 0
-                tile[0].timeCyle(0,0,fed,hurt)
+                sounds = self.soundHistory[i][j]
+                [make1, make2] = tile[0].timeCyle(sounds[0],sounds[1],fed,hurt)
 
 environment = Environment()
 #environment.generateRandomFood()
