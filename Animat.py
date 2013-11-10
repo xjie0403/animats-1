@@ -10,6 +10,7 @@ class Animat:
         self.energy = 100
         self.openMouth = 0
         self.hide = 0
+
     def train(self, animatInputs, animatOutputs):
         """
         @param animatInputs: a list of AnimatInput objects to train on
@@ -46,7 +47,7 @@ class Animat:
     def mouthOpen(self):
         return self.openMouth
 
-    def hide(self):
+    def hidden(self):
         return self.hide
 
     def timeCyle(self, hear1, hear2, fed, hurt):
