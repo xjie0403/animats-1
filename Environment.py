@@ -41,7 +41,7 @@ class Environment:
     #predators = [XYValues() for l in range(100)]
 
     def __init__(self):
-        self.environmentSize = 100
+        self.environmentSize = 64
         self.animats = []
         self.soundHistory = []
         for i in range(self.environmentSize):
@@ -108,7 +108,42 @@ class Environment:
                 sounds = self.soundHistory[i][j]
                 [make1, make2] = tile[0].timeCyle(sounds[0],sounds[1],fed,hurt)
 
+    def getHealthiestNeighbor(self, row, col):
+        """
+
+        @rtype : Animat
+        """
+        bestAnimat = self.animats[row][col][0] # current animat
+        maintain = True
+        for i in range(-1,2):
+            for j in range(-1,2):
+                if row + i >= len(self.animats): # wraparound if the index is too big (don't need to handle negative case)
+                    i -= len(self.animats) + 1
+                if col + j >= len(self.animats[i]):
+                    j -= len(self.animats[i]) + 1
+                tile = self.animats[row+i][col+j]
+                if (i != 0 or j != 0) and tile[0].energy > bestAnimat.energy:
+                    bestAnimat = tile[0]
+                    maintain = False
+        if not maintain:
+            return bestAnimat
+        else:
+            return False
+
+
+
+    def trainCycle(self):
+        for i in range(self.environmentSize):
+            for j in range(self.environmentSize):
+                individual = self.animats[i][j][0]
+                neighbor = self.getHealthiestNeighbor(i,j)
+                if neighbor:
+                    individual.train(*neighbor.getTrainingData())
+
 environment = Environment()
+#environment.timeCycle()
+#environment.trainCycle()
+
 #environment.generateRandomFood()
 #environment.generateRandomPredators()
 #environment.moveFood()

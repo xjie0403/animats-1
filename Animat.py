@@ -7,21 +7,28 @@ AnimatsOutputs = namedtuple('AnimatsOutputs',['make1','make2','openMouth','hide'
 class Animat:
     def __init__(self):
         self.brain = BrainController()
-
+        self.energy = 100
+        self.openMouth = 0
+        self.hide = 0
     def train(self, animatInputs, animatOutputs):
         """
         @param animatInputs: a list of AnimatInput objects to train on
         @param animatOutputs: a list of AnimatOutput objects to train on
         """
-        for i in len(animatInputs):
+        auditoryInputs = []
+        auditoryOutputs = []
+        vocalInputs = []
+        vocalOutputs = []
+        for i in range(len(animatInputs)):
             input = animatInputs[i]
             output = animatOutputs[i]
-            self.brain.trainAuditory([input.hear1, input.hear2],
-                                     [output.openMouth, output.hide])
-            self.brain.trainVocal([input.fed, input.hurt],
-                                  [output.make1, output.make2])
-            self.openMouth = 0
-            self.hide = 0
+            auditoryInputs.append([input.hear1, input.hear2])
+            auditoryOutputs.append([output.openMouth, output.hide])
+            vocalInputs.append([input.fed, input.hurt])
+            vocalOutputs.append([output.make1, output.make2])
+        self.brain.trainAuditory(auditoryInputs, auditoryOutputs)
+        self.brain.trainVocal(vocalInputs, vocalOutputs)
+
 
     def getTrainingData(self):
         dataInputs = [(0,0),(1,0),(0,1),(1,1)]
@@ -48,9 +55,23 @@ class Animat:
         @param inputs: a list of 4 floats (hear1, hear2, fed, hurt)
         @return: nothing #a list of 4 integers (openMouth, hide, make1, make2)
         """
+        if fed == 1:
+            self.energy += 1
+        if hurt == 1:
+            self.energy -= 1
         [openMouth, hide, make1, make2] = self.brain.activateNetworks([hear1, hear2, fed, hurt])
         self.openMouth = openMouth
         self.hide = hide
+
+        if openMouth == 1:
+            self.energy -= 0.05
+        if hide == 1:
+            self.energy -= 0.05
+        if make1 == 1:
+            self.energy -= 0.05
+        if make2 == 1:
+            self.energy -= 0.05
+
         return [make1, make2]
 
 
