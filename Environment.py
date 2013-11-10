@@ -132,7 +132,7 @@ class Environment:
                     fed = 1
                 else:
                     fed = 0
-                if tile[2] == 1 and (not tile[0].hide()):
+                if tile[2] == 1 and (not tile[0].hidden()):
                     hurt = 1
                 else:
                     hurt = 0
