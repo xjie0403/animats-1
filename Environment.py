@@ -78,8 +78,17 @@ class Environment:
 
         #generate new positions in the food list
         for i in self.food:
-            i.setX(i.getX() + random.randint(-1, 1))
-            i.setY(i.getY() + random.randint(-1, 1))
+            tempX = random.randint(-1, 1)
+            if i.getX() == self.environmentSize - 1 and tempX == 1:
+                i.setX(0)
+            else:
+                i.setX(i.getX() + tempX)
+
+            tempY = random.randint(-1, 1)
+            if i.getY() == self.environmentSize - 1 and tempY == 1:
+                i.setY(0)
+            else:
+                i.setY(i.getY() + tempY)
 
         #set new food positions in the tiles
         self.setFoodInTiles()
@@ -94,8 +103,17 @@ class Environment:
 
         #generate new positions in the predator list
         for i in self.predators:
-            i.setX(i.getX() + random.randint(-1, 1))
-            i.setY(i.getY() + random.randint(-1, 1))
+            tempX = random.randint(-1, 1)
+            if i.getX() == self.environmentSize - 1 and tempX == 1:
+                i.setX(0)
+            else:
+                i.setX(i.getX() + tempX)
+
+            tempY = random.randint(-1, 1)
+            if i.getY() == self.environmentSize - 1 and tempY == 1:
+                i.setY(0)
+            else:
+                i.setY(i.getY() + tempY)
 
         #set new predator positions in the tiles
         self.setPredatorsInTiles()
@@ -178,15 +196,5 @@ class Environment:
                     individual.train(*neighbor.getTrainingData())
 
 environment = Environment()
-#environment.generateRandomFood()
-#environment.generateRandomPredators()
-#environment.moveFood()
-#environment.movePredators()
 environment.timeCycle()
-#environment.timeCycle()
 #environment.trainCycle()
-
-#environment.generateRandomFood()
-#environment.generateRandomPredators()
-#environment.moveFood()
-#environment.movePredators()
