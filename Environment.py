@@ -81,12 +81,16 @@ class Environment:
             tempX = random.randint(-1, 1)
             if i.getX() == self.environmentSize - 1 and tempX == 1:
                 i.setX(0)
+            elif i.getX() == 0 and tempX == -1:
+                i.setX(self.environmentSize -1)
             else:
                 i.setX(i.getX() + tempX)
 
             tempY = random.randint(-1, 1)
             if i.getY() == self.environmentSize - 1 and tempY == 1:
                 i.setY(0)
+            elif i.getY() == 0 and tempY == -1:
+                i.setY(self.environmentSize -1)
             else:
                 i.setY(i.getY() + tempY)
 
@@ -106,12 +110,16 @@ class Environment:
             tempX = random.randint(-1, 1)
             if i.getX() == self.environmentSize - 1 and tempX == 1:
                 i.setX(0)
+            elif i.getX() == 0 and tempX == -1:
+                i.setX(self.environmentSize -1)
             else:
                 i.setX(i.getX() + tempX)
 
             tempY = random.randint(-1, 1)
             if i.getY() == self.environmentSize - 1 and tempY == 1:
                 i.setY(0)
+            elif i.getY() == 0 and tempY == -1:
+                i.setY(self.environmentSize -1)
             else:
                 i.setY(i.getY() + tempY)
 
