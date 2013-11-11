@@ -70,6 +70,12 @@ class BrainController:
         return map(lambda x: int(round(x)), self.auditoryNetwork.activate(inputs[0:2]).tolist() +
                                             self.vocalNetwork.activate(inputs[2:4]).tolist())
 
+    def activateVocal(self, inputs): # inputs is a list of 2 numbers
+        return map(lambda x: int(round(x)), self.vocalNetwork.activate(inputs))
+
+    def activateAuditory(self, inputs): # inputs is a list of 2 numbers
+        return map(lambda x: int(round(x)), self.auditoryNetwork.activate(inputs))
+
 sampleInputData = ((0,0),(1,0),(0,1),(1,1))
 sampleOutputData = ((0,0),(1,0),(0,1),(1,1))
 

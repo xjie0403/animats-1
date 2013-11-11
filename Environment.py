@@ -37,8 +37,8 @@ class Environment:
             self.soundHistory.append([]) # [sig1 sig2]
             self.animats.append([])
             for j in range(self.environmentSize):
-                self.animats[i].append([Animat(), 0, 0])
-                self.soundHistory[i].append([0, 0])
+                self.animats[i].append([Animat(), -1, -1]) # animat, food, predator
+                self.soundHistory[i].append([-1, -1]) #sig1, sig2
 
         #initialize food
         self.food = [XYValues() for k in range(self.environmentSize)]
@@ -93,9 +93,9 @@ class Environment:
         #set new food positions in the tiles
         self.setFoodInTiles()
 
-        print "Here are the food coordinates after moving:"
-        for k in self.food:
-            print k.getCoordinates()
+        #print "Here are the food coordinates after moving:"
+        #for k in self.food:
+        #    print k.getCoordinates()
 
     def movePredators(self):
         #remove predators in tiles
@@ -118,19 +118,19 @@ class Environment:
         #set new predator positions in the tiles
         self.setPredatorsInTiles()
 
-        print "Here are the predator coordinates after moving:"
-        for k in self.predators:
-            print k.getCoordinates()
+        #print "Here are the predator coordinates after moving:"
+        #for k in self.predators:
+        #    print k.getCoordinates()
 
     def removeFoodInTiles(self):
         for i in self.food:
             tile = self.animats[i.getX()][i.getY()]
-            tile[1] = 0
+            tile[1] = -1
 
     def removePredatorsInTiles(self):
         for i in self.predators:
             tile = self.animats[i.getX()][i.getY()]
-            tile[2] = 0
+            tile[2] = -1
 
     def setFoodInTiles(self):
         for i in self.food:
@@ -149,11 +149,11 @@ class Environment:
                 if tile[1] == 1 and tile[0].mouthOpen():
                     fed = 1
                 else:
-                    fed = 0
+                    fed = -1
                 if tile[2] == 1 and (not tile[0].hidden()):
                     hurt = 1
                 else:
-                    hurt = 0
+                    hurt = -1
                 sounds = self.soundHistory[i][j]
                 [make1, make2] = tile[0].timeCyle(sounds[0],sounds[1],fed,hurt)
 

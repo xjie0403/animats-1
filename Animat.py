@@ -30,9 +30,21 @@ class Animat:
         self.brain.trainAuditory(auditoryInputs, auditoryOutputs)
         self.brain.trainVocal(vocalInputs, vocalOutputs)
 
+    def getBehaviorString(self):
+        dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        auditoryStrategy = ""
+        vocalStrategy = ""
+        for i in range(len(dataInputs)):
+            input = dataInputs[i]
+            aOut = self.brain.activateAuditory(input)
+            vOut = self.brain.activateVocal(input)
+            auditoryStrategy += str(aOut[0])+str(aOut[1])
+            vocalStrategy += str(vOut[0])+str(vOut[1])
+        return auditoryStrategy + " " + vocalStrategy
 
     def getTrainingData(self):
-        dataInputs = [(0,0),(1,0),(0,1),(1,1)]
+        #dataInputs = [(0,0),(1,0),(0,1),(1,1)]
+        dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         inputs = []
         outputs = []
         for i in range(len(dataInputs)):
