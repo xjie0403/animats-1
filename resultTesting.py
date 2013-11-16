@@ -2,7 +2,7 @@ from Environment import *
 
 environment = Environment()
 
-for century in range(30):
+for century in range(5):
     print "Beginning century {0}".format(century)
     for round in range(100):
         environment.timeCycle()

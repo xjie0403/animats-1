@@ -30,7 +30,7 @@ class XYValues:
 class Environment:
 
     def __init__(self):
-        self.environmentSize = 64
+        self.environmentSize = 32
         self.animats = []
         self.soundHistory = []
         for i in range(self.environmentSize):
@@ -151,6 +151,7 @@ class Environment:
             tile[2] = 1
 
     def timeCycle(self):
+        newSounds = []
         for i in range(self.environmentSize):
             for j in range(self.environmentSize):
                 tile = self.animats[i][j]
@@ -164,6 +165,10 @@ class Environment:
                     hurt = -1
                 sounds = self.soundHistory[i][j]
                 [make1, make2] = tile[0].timeCyle(sounds[0],sounds[1],fed,hurt)
+                newSounds.append([i, j, make1, make2])
+
+        for soundList in newSounds:
+            self.soundHistory[soundList[0]][soundList[1]] = [soundList[2], soundList[3]]
 
         #move food
         self.moveFood()
