@@ -7,4 +7,4 @@ for century in range(5):
     for round in range(100):
         environment.timeCycle()
     environment.trainCycle()
-    print environment.animats[10][10][0].getBehaviorString()
+    print environment.animats[10][10][0].getBehaviorString() + " " + environment.animats[15][15][0].getBehaviorString()

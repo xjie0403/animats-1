@@ -31,6 +31,7 @@ class Environment:
 
     def __init__(self):
         self.environmentSize = 32
+        self.numFoodPredators = 25
         self.animats = []
         self.soundHistory = []
         for i in range(self.environmentSize):
@@ -41,11 +42,11 @@ class Environment:
                 self.soundHistory[i].append([-1, -1]) #sig1, sig2
 
         #initialize food
-        self.food = [XYValues() for k in range(self.environmentSize)]
+        self.food = [XYValues() for k in range(self.numFoodPredators)]
         self.generateRandomFood()
 
         #initialize predator
-        self.predators = [XYValues() for l in range(self.environmentSize)]
+        self.predators = [XYValues() for l in range(self.numFoodPredators)]
         self.generateRandomPredators()
 
     def generateRandomFood(self):
