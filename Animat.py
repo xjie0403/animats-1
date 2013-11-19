@@ -21,10 +21,11 @@ class Animat:
         vocalInputs = []
         vocalOutputs = []
         for i in range(len(animatInputs.auditoryInputs)):
-            auditoryInputs.append(animatInputs.auditoryInputs[i])
-            auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
-            vocalInputs.append(animatInputs.vocalInputs[i])
-            vocalOutputs.append(animatOutputs.vocalOutputs[i])
+            for j in range(40):
+                auditoryInputs.append(animatInputs.auditoryInputs[i])
+                auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
+                vocalInputs.append(animatInputs.vocalInputs[i])
+                vocalOutputs.append(animatOutputs.vocalOutputs[i])
         self.brain.trainAuditory(auditoryInputs, auditoryOutputs)
         self.brain.trainVocal(vocalInputs, vocalOutputs)
 
@@ -89,7 +90,7 @@ class Animat:
         return [make1, make2]
 
     def getSummaryString(self):
-        return 'Behavior string: {0}, Energy: {1}\n'.format(self.getBehaviorString(),self.energy)
+        return 'Behavior string: {0}, Energy: {1}'.format(self.getBehaviorString(),self.energy)
 
 #a = Animat()
 #a.getTrainingData()

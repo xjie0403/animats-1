@@ -7,4 +7,5 @@ for century in range(50):
     for round in range(100):
         environment.timeCycle()
     environment.trainCycle()
-    print "--Animat 1--\n" + environment.animats[10][10][0].getSummaryString() + "--Animat 2--\n" + environment.animats[11][10][0].getSummaryString()
+    print environment.animats[10][10][0].getSummaryString() + "\t\t" + environment.animats[11][10][0].getSummaryString()
+    print environment.getHealthiestNeighbor(10,10).getSummaryString() + "\t\t" + environment.getHealthiestNeighbor(11,10).getSummaryString() + "\n"

@@ -40,6 +40,7 @@ class Environment:
             for j in range(self.environmentSize):
                 self.animats[i].append([Animat(), -1, -1]) # animat, food, predator
                 self.soundHistory[i].append([-1, -1]) #sig1, sig2
+                print self.animats[i][j][0].getBehaviorString()
 
         #initialize food
         self.food = [XYValues() for k in range(self.numFoodPredators)]
