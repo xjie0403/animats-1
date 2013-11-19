@@ -209,6 +209,9 @@ class Environment:
                 if neighbor:
                     individual.train(*neighbor.getTrainingData())
 
+
+
+
 #environment = Environment()
 #environment.timeCycle()
 #environment.trainCycle()

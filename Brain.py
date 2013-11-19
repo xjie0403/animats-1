@@ -59,7 +59,7 @@ class BrainController:
         @param kwargs:
         @return:
         """
-        return self._train(inputs, targets, self.auditoryNetwork, **kwargs)
+        return self._train(inputs, targets, self.vocalNetwork, **kwargs)
 
     def activateNetworks(self, inputs):
         """

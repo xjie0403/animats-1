@@ -1,8 +1,8 @@
 from Brain import BrainController
 from collections import namedtuple
 
-AnimatInputs = namedtuple('AnimatInputs', ['hear1', 'hear2', 'fed', 'hurt'])
-AnimatsOutputs = namedtuple('AnimatsOutputs',['make1','make2','openMouth','hide'])
+AnimatInputs = namedtuple('AnimatInputs', ['auditoryInputs', 'vocalInputs'])
+AnimatsOutputs = namedtuple('AnimatsOutputs',['auditoryOutputs','vocalOutputs'])
 
 class Animat:
     def __init__(self):
@@ -13,20 +13,18 @@ class Animat:
 
     def train(self, animatInputs, animatOutputs):
         """
-        @param animatInputs: a list of AnimatInput objects to train on
-        @param animatOutputs: a list of AnimatOutput objects to train on
+        @param animatInputs: an AnimatInput object to train on
+        @param animatOutputs: an AnimatOutput object to train on
         """
         auditoryInputs = []
         auditoryOutputs = []
         vocalInputs = []
         vocalOutputs = []
-        for i in range(len(animatInputs)):
-            input = animatInputs[i]
-            output = animatOutputs[i]
-            auditoryInputs.append([input.hear1, input.hear2])
-            auditoryOutputs.append([output.openMouth, output.hide])
-            vocalInputs.append([input.fed, input.hurt])
-            vocalOutputs.append([output.make1, output.make2])
+        for i in range(len(animatInputs.auditoryInputs)):
+            auditoryInputs.append(animatInputs.auditoryInputs[i])
+            auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
+            vocalInputs.append(animatInputs.vocalInputs[i])
+            vocalOutputs.append(animatOutputs.vocalOutputs[i])
         self.brain.trainAuditory(auditoryInputs, auditoryOutputs)
         self.brain.trainVocal(vocalInputs, vocalOutputs)
 
@@ -46,15 +44,18 @@ class Animat:
         #dataInputs = [(0,0),(1,0),(0,1),(1,1)]
         dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         inputs = []
-        outputs = []
+        auditoryOutputs = []
+        vocalOutputs = []
         for i in range(len(dataInputs)):
-            for j in range(len(dataInputs)):
-                input = AnimatInputs(*(dataInputs[i] + dataInputs[j]))
-                output = AnimatsOutputs(*self.brain.activateNetworks(dataInputs[i] + dataInputs[j]))
-                inputs.append(input)
-                outputs.append(output)
+            #input = AnimatInputs(*(dataInputs[i] + dataInputs[j]))
+            #output = AnimatsOutputs(*self.brain.activateNetworks(dataInputs[i] + dataInputs[j]))
+            #inputs.append(input)
+            #outputs.append(output)
+            o = self.brain.activateNetworks(dataInputs[i]+dataInputs[i])
+            auditoryOutputs.append((o[0],o[1]))
+            vocalOutputs.append((o[2],o[3]))
 
-        return [inputs, outputs]
+        return [AnimatInputs(dataInputs,dataInputs), AnimatsOutputs(auditoryOutputs,vocalOutputs)]
 
     def mouthOpen(self):
         return self.openMouth
@@ -87,6 +88,8 @@ class Animat:
 
         return [make1, make2]
 
+    def getSummaryString(self):
+        return 'Behavior string: {0}, Energy: {1}\n'.format(self.getBehaviorString(),self.energy)
 
 #a = Animat()
 #a.getTrainingData()
