@@ -1,6 +1,7 @@
 #Environment Class
 
 import random
+from collections import Counter
 from Animat import Animat
 
 class XYValues:
@@ -210,6 +211,13 @@ class Environment:
                 if neighbor:
                     individual.train(*neighbor.getTrainingData())
 
+    def getBehaviors(self):
+        cnt = Counter()
+        for i in range(self.environmentSize):
+            for j in range(self.environmentSize):
+                cnt[self.animats[i][j][0].getBehaviorString()] += 1
+
+        return cnt
 
 
 
