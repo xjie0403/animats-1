@@ -2,7 +2,7 @@ from Brain import BrainController
 from collections import namedtuple
 
 AnimatInputs = namedtuple('AnimatInputs', ['auditoryInputs', 'vocalInputs'])
-AnimatsOutputs = namedtuple('AnimatsOutputs',['auditoryOutputs','vocalOutputs'])
+AnimatOutputs = namedtuple('AnimatOutputs',['auditoryOutputs','vocalOutputs'])
 
 class Animat:
     def __init__(self):
@@ -21,13 +21,15 @@ class Animat:
         vocalInputs = []
         vocalOutputs = []
         for i in range(len(animatInputs.auditoryInputs)):
-            for j in range(20):
+            for j in range(5):
                 auditoryInputs.append(animatInputs.auditoryInputs[i])
                 auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
                 vocalInputs.append(animatInputs.vocalInputs[i])
                 vocalOutputs.append(animatOutputs.vocalOutputs[i])
-        self.brain.trainAuditory(auditoryInputs, auditoryOutputs)
-        self.brain.trainVocal(vocalInputs, vocalOutputs)
+
+        error = self.brain.trainAuditory(auditoryInputs, auditoryOutputs, momentum=0.99)
+        error += self.brain.trainVocal(vocalInputs, vocalOutputs, momentum=0.99)
+        return error
 
     def getBehaviorString(self):
         dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
@@ -56,7 +58,7 @@ class Animat:
             auditoryOutputs.append((o[0],o[1]))
             vocalOutputs.append((o[2],o[3]))
 
-        return [AnimatInputs(dataInputs,dataInputs), AnimatsOutputs(auditoryOutputs,vocalOutputs)]
+        return [AnimatInputs(dataInputs,dataInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
 
     def mouthOpen(self):
         return self.openMouth

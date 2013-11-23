@@ -2,7 +2,7 @@
 
 import random
 from collections import Counter
-from Animat import Animat
+from Animat import Animat, AnimatOutputs, AnimatInputs
 
 class XYValues:
     
@@ -50,6 +50,17 @@ class Environment:
         #initialize predator
         self.predators = [XYValues() for l in range(self.numFoodPredators)]
         self.generateRandomPredators()
+
+    def trainPerfect(self, animat, strat=1):
+        sampInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        if(strat == 1):
+            sampOutputs = [(0,0),(0,1),(1,0),(1,1)]
+        else:
+            sampOutputs = [(0,0),(1,0),(0,1),(1,1)]
+        error = 1
+        while(error > 0.05):
+            error = animat.train(AnimatInputs(sampInputs*50,sampInputs*50), AnimatOutputs(sampOutputs*50,sampOutputs*50))
+
 
     def generateRandomFood(self):
         for i in self.food:
