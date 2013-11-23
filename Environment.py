@@ -31,8 +31,9 @@ class XYValues:
 class Environment:
 
     def __init__(self):
-        self.environmentSize = 32
-        self.numFoodPredators = 25
+        self.environmentSize = 64
+        self.numFood = 100 #25
+        self.numPredators = 200 #50
         self.animats = []
         self.soundHistory = []
         for i in range(self.environmentSize):
@@ -41,14 +42,16 @@ class Environment:
             for j in range(self.environmentSize):
                 self.animats[i].append([Animat(), -1, -1]) # animat, food, predator
                 self.soundHistory[i].append([-1, -1]) #sig1, sig2
+                if i == 10 and j == 10:
+                    self.trainPerfect(self.animats[i][j][0])
                 print self.animats[i][j][0].getBehaviorString()
 
         #initialize food
-        self.food = [XYValues() for k in range(self.numFoodPredators)]
+        self.food = [XYValues() for k in range(self.numFood)]
         self.generateRandomFood()
 
         #initialize predator
-        self.predators = [XYValues() for l in range(self.numFoodPredators)]
+        self.predators = [XYValues() for l in range(self.numPredators)]
         self.generateRandomPredators()
 
     def trainPerfect(self, animat, strat=1):
