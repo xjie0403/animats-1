@@ -1,5 +1,6 @@
 from Brain import BrainController
 from collections import namedtuple
+from random import shuffle
 
 AnimatInputs = namedtuple('AnimatInputs', ['auditoryInputs', 'vocalInputs'])
 AnimatOutputs = namedtuple('AnimatOutputs',['auditoryOutputs','vocalOutputs'])
@@ -46,6 +47,7 @@ class Animat:
     def getTrainingData(self):
         #dataInputs = [(0,0),(1,0),(0,1),(1,1)]
         dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        shuffle(dataInputs)
         inputs = []
         auditoryOutputs = []
         vocalOutputs = []

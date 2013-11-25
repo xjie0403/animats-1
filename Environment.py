@@ -42,9 +42,10 @@ class Environment:
             for j in range(self.environmentSize):
                 self.animats[i].append([Animat(), -1, -1]) # animat, food, predator
                 self.soundHistory[i].append([-1, -1]) #sig1, sig2
-                if i == 10 and j == 10:
-                    self.trainPerfect(self.animats[i][j][0])
+                #if i == 10 and j == 10:
+                #    self.trainPerfect(self.animats[i][j][0])
                 print self.animats[i][j][0].getBehaviorString()
+
 
         #initialize food
         self.food = [XYValues() for k in range(self.numFood)]
@@ -54,14 +55,24 @@ class Environment:
         self.predators = [XYValues() for l in range(self.numPredators)]
         self.generateRandomPredators()
 
+    def trainPerfectBlock(self, begrow, endrow, begcol, endcol):
+        for i in range(begrow, endrow+1):
+            for j in range(begcol, endcol+1):
+                self.trainPerfect(self.animats[i][j][0])
+
+
     def trainPerfect(self, animat, strat=1):
         sampInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        ind = [0, 1, 2, 3]
+        random.shuffle(ind)
         if(strat == 1):
             sampOutputs = [(0,0),(0,1),(1,0),(1,1)]
         else:
             sampOutputs = [(0,0),(1,0),(0,1),(1,1)]
         error = 1
         while(error > 0.05):
+            sampInputs = [ sampInputs[i] for i in ind]
+            sampOutputs = [ sampOutputs[i] for i in ind]
             error = animat.train(AnimatInputs(sampInputs*50,sampInputs*50), AnimatOutputs(sampOutputs*50,sampOutputs*50))
 
 

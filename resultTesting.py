@@ -1,8 +1,8 @@
 from Environment import *
 
 environment = Environment()
-
-for century in range(50):
+environment.trainPerfectBlock(2,7,2,7)
+for century in range(100):
     print "Beginning century {0}".format(century)
     for round in range(100):
         environment.timeCycle()
