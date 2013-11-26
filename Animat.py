@@ -1,6 +1,6 @@
 from Brain import BrainController
 from collections import namedtuple
-from random import shuffle
+from random import shuffle, randint
 
 AnimatInputs = namedtuple('AnimatInputs', ['auditoryInputs', 'vocalInputs'])
 AnimatOutputs = namedtuple('AnimatOutputs',['auditoryOutputs','vocalOutputs'])
@@ -79,10 +79,14 @@ class Animat:
         if hurt == 1:
             self.energy -= 1
         [openMouth, hide, make1, make2] = self.brain.activateNetworks([hear1, hear2, fed, hurt])
-        self.openMouth = openMouth
+        if(randint(0,99) < 5):
+            self.openMouth = 1
+        else:
+            self.openMouth = openMouth
+
         self.hide = hide
 
-        if openMouth == 1:
+        if self.openMouth == 1:
             self.energy -= 0.05
         if hide == 1:
             self.energy -= 0.05
