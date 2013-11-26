@@ -22,6 +22,7 @@ class BrainController:
         net.addConnection(FullConnection(net['hidden'], net['out']))
         net.addConnection(FullConnection(net['bias'],net['hidden']))
         net.addConnection(FullConnection(net['bias'],net['out']))
+        net.addConnection(FullConnection(net['in'],net['out']))
         net.sortModules()
 
     def _train(self, inputs, outputs, net, **kwargs):

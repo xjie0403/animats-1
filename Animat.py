@@ -22,7 +22,7 @@ class Animat:
         vocalInputs = []
         vocalOutputs = []
         for i in range(len(animatInputs.auditoryInputs)):
-            for j in range(15):
+            for j in range(10):
                 auditoryInputs.append(animatInputs.auditoryInputs[i])
                 auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
                 vocalInputs.append(animatInputs.vocalInputs[i])
