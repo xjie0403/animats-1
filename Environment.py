@@ -41,11 +41,13 @@ class Environment:
             self.animats.append([])
             for j in range(self.environmentSize):
                 self.animats[i].append([Animat(), -1, -1]) # animat, food, predator
-                self.soundHistory[i].append([-1, -1]) #sig1, sig2
+                #self.soundHistory[i].append([-1, -1]) #sig1, sig2
                 #if i == 10 and j == 10:
                 #    self.trainPerfect(self.animats[i][j][0])
                 print self.animats[i][j][0].getBehaviorString()
 
+        # initialize sound images
+        self.soundHistory = [[[-1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
 
         #initialize food
         self.food = [XYValues() for k in range(self.numFood)]
@@ -201,14 +203,26 @@ class Environment:
                 #make2 = -1 if make2 <= 0 else 1
                 newSounds.append([i, j, make1])
 
+        self.soundHistory = [[[-1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
         for soundList in newSounds:
-            self.soundHistory[soundList[0]][soundList[1]] = [soundList[2]]
+            if make1 == 1:
+                self.propagateSound(soundList[0],soundList[1])
+                #self.soundHistory[soundList[0]][soundList[1]] = [soundList[2]]
 
         #move food
         self.moveFood()
 
         #move predators
         #self.movePredators()
+
+    def propagateSound(self, row, col):
+        for i in range(-1,2):
+            for j in range(-1,2):
+                if row + i >= len(self.animats):
+                    i -= len(self.animats) + 1
+                if col + j >= len(self.animats[i]):
+                    j -= len(self.animats[i]) + 1
+                self.soundHistory[row + i][col + j] = [1]
 
     def getHealthiestNeighbor(self, row, col):
         """

@@ -1,9 +1,9 @@
 from Environment import *
 
 environment = Environment()
-environment.trainPerfectBlock(5,5,5,5)
+environment.trainPerfectBlock(0,5,0,5)
 testN = 5
-for century in range(800):
+for century in range(400):
     print "Beginning century {0}".format(century)
     for round in range(100):
         environment.timeCycle()
