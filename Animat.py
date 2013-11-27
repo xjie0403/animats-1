@@ -51,7 +51,7 @@ class Animat:
         vocalInputs = []
         auditoryOutputs = []
         vocalOutputs = []
-        for i in range(2):
+        for i in range(4):
             #input = AnimatInputs(*(dataInputs[i] + dataInputs[j]))
             #output = AnimatsOutputs(*self.brain.activateNetworks(dataInputs[i] + dataInputs[j]))
             #inputs.append(input)

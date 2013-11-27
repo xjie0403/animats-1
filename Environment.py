@@ -196,7 +196,7 @@ class Environment:
                 #else:
                 #    hurt = -1
                 sounds = self.soundHistory[i][j]
-                make1 = tile[0].timeCyle(sounds[0],fed)
+                [make1] = tile[0].timeCyle(sounds[0],fed)
                 make1 = -1 if make1 <= 0 else 1
                 #make2 = -1 if make2 <= 0 else 1
                 newSounds.append([i, j, make1])
