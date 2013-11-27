@@ -31,9 +31,9 @@ class XYValues:
 class Environment:
 
     def __init__(self):
-        self.environmentSize = 11#16 #64
-        self.numFood = 3#6 #100
-        self.numPredators = 6#12 #200
+        self.environmentSize = 11 #32 #64
+        self.numFood = 4 #25 #100
+        self.numPredators = 0 #50 #200
         self.animats = []
         self.soundHistory = []
         for i in range(self.environmentSize):
@@ -66,14 +66,18 @@ class Environment:
         ind = [0, 1, 2, 3]
         random.shuffle(ind)
         if(strat == 1):
-            sampOutputs = [(0,0),(0,1),(1,0),(1,1)]
+            #sampOutputs = [(0,0),(0,1),(1,0),(1,1)]
+            sampOutputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         else:
-            sampOutputs = [(0,0),(1,0),(0,1),(1,1)]
+            #sampOutputs = [(0,0),(1,0),(0,1),(1,1)]
+            sampOutputs = [(-1,-1),(1,-1),(-1,1),(1,1)]
+
         error = 1
         while(error > 0.05):
             sampInputs = [ sampInputs[i] for i in ind]
             sampOutputs = [ sampOutputs[i] for i in ind]
             error = animat.train(AnimatInputs(sampInputs*50,sampInputs*50), AnimatOutputs(sampOutputs*50,sampOutputs*50))
+            print error
 
 
     def generateRandomFood(self):
@@ -193,8 +197,8 @@ class Environment:
                     hurt = -1
                 sounds = self.soundHistory[i][j]
                 [make1, make2] = tile[0].timeCyle(sounds[0],sounds[1],fed,hurt)
-                make1 = -1 if make1 == 0 else 1
-                make2 = -1 if make2 == 0 else 1
+                make1 = -1 if make1 <= 0 else 1
+                make2 = -1 if make2 <= 0 else 1
                 newSounds.append([i, j, make1, make2])
 
         for soundList in newSounds:
@@ -231,12 +235,23 @@ class Environment:
 
 
     def trainCycle(self):
+        trainingData = []
         for i in range(self.environmentSize):
+            trainingData.append([])
             for j in range(self.environmentSize):
                 individual = self.animats[i][j][0]
                 neighbor = self.getHealthiestNeighbor(i,j)
                 if neighbor:
-                    individual.train(*neighbor.getTrainingData())
+                    trainingData[i].append(neighbor.getTrainingData())
+                else:
+                    trainingData[i].append(False)
+
+        for i in range(self.environmentSize):
+            for j in range(self.environmentSize):
+                individual = self.animats[i][j][0]
+                neighborData = trainingData[i][j];
+                if neighborData:
+                    individual.train(*neighborData)
 
     def getBehaviors(self):
         cnt = Counter()

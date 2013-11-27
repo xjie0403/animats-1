@@ -1,4 +1,4 @@
-from Brain import BrainController
+from PerceptronBrain import BrainController
 from collections import namedtuple
 from random import shuffle, randint
 
@@ -22,11 +22,10 @@ class Animat:
         vocalInputs = []
         vocalOutputs = []
         for i in range(len(animatInputs.auditoryInputs)):
-            for j in range(10):
-                auditoryInputs.append(animatInputs.auditoryInputs[i])
-                auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
-                vocalInputs.append(animatInputs.vocalInputs[i])
-                vocalOutputs.append(animatOutputs.vocalOutputs[i])
+            auditoryInputs.append(animatInputs.auditoryInputs[i])
+            auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
+            vocalInputs.append(animatInputs.vocalInputs[i])
+            vocalOutputs.append(animatOutputs.vocalOutputs[i])
 
         error = self.brain.trainAuditory(auditoryInputs, auditoryOutputs, momentum=0.99)
         error += self.brain.trainVocal(vocalInputs, vocalOutputs, momentum=0.99)
@@ -38,35 +37,41 @@ class Animat:
         vocalStrategy = ""
         for i in range(len(dataInputs)):
             input = dataInputs[i]
-            aOut = self.brain.activateAuditory(input)
-            vOut = self.brain.activateVocal(input)
+            aOut = map(lambda x: 0 if x <= 0 else 1, self.brain.activateAuditory(input))
+            vOut = map(lambda x: 0 if x <= 0 else 1, self.brain.activateVocal(input))
             auditoryStrategy += str(aOut[0])+str(aOut[1])
             vocalStrategy += str(vOut[0])+str(vOut[1])
         return auditoryStrategy + " " + vocalStrategy
 
     def getTrainingData(self):
         #dataInputs = [(0,0),(1,0),(0,1),(1,1)]
-        dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
-        shuffle(dataInputs)
-        inputs = []
+        #dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        #shuffle(dataInputs)
+        auditoryInputs = []
+        vocalInputs = []
         auditoryOutputs = []
         vocalOutputs = []
-        for i in range(len(dataInputs)):
+        for i in range(4):
             #input = AnimatInputs(*(dataInputs[i] + dataInputs[j]))
             #output = AnimatsOutputs(*self.brain.activateNetworks(dataInputs[i] + dataInputs[j]))
             #inputs.append(input)
             #outputs.append(output)
-            o = self.brain.activateNetworks(dataInputs[i]+dataInputs[i])
+            dataInput = []
+            for j in range(4):
+                dataInput.append(-1 if randint(0,1) == 0 else 1)
+            auditoryInputs.append(dataInput[0:2])
+            vocalInputs.append(dataInput[2:4])
+            o = self.brain.activateNetworks(dataInput)
             auditoryOutputs.append((o[0],o[1]))
             vocalOutputs.append((o[2],o[3]))
 
-        return [AnimatInputs(dataInputs,dataInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
+        return [AnimatInputs(auditoryInputs,vocalInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
 
     def mouthOpen(self):
-        return self.openMouth
+        return (self.openMouth > 0)
 
     def hidden(self):
-        return self.hide
+        return (self.hide > 0)
 
     def timeCyle(self, hear1, hear2, fed, hurt):
         """
@@ -84,11 +89,14 @@ class Animat:
         else:
             self.openMouth = openMouth
 
-        self.hide = hide
+        if(randint(0,99) < 5):
+            self.hide = 1
+        else:
+            self.hide = hide
 
         if self.openMouth == 1:
             self.energy -= 0.05
-        if hide == 1:
+        if self.hide == 1:
             self.energy -= 0.05
         if make1 == 1:
             self.energy -= 0.05
