@@ -1,7 +1,7 @@
 from Environment import *
 
 environment = Environment()
-environment.trainPerfectBlock(5,5,5,5)
+environment.trainPerfectBlock(4,6,4,6)
 testN = 5
 for century in range(300):
     print "Beginning century {0}".format(century)
@@ -24,5 +24,6 @@ for century in range(300):
     #print environment.getHealthiestNeighbor(10,10).getSummaryString() + "\t\t" + environment.getHealthiestNeighbor(11,10).getSummaryString() + "\n"
 
     print cnt.most_common(10)
-    print cnt['00011011 00011011']
-    print cnt['00100111 00100111']
+    print cnt['01 01']
+    #print cnt['00011011 00011011']
+    #print cnt['00100111 00100111']

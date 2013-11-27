@@ -32,7 +32,7 @@ class Environment:
 
     def __init__(self):
         self.environmentSize = 11 #32 #64
-        self.numFood = 4 #25 #100
+        self.numFood = 3 #25 #100
         self.numPredators = 0 #50 #200
         self.animats = []
         self.soundHistory = []
@@ -77,7 +77,7 @@ class Environment:
             sampInputs = [ sampInputs[i] for i in ind]
             sampOutputs = [ sampOutputs[i] for i in ind]
             error = animat.train(AnimatInputs(sampInputs*50,sampInputs*50), AnimatOutputs(sampOutputs*50,sampOutputs*50))
-            print error
+            #print error
 
 
     def generateRandomFood(self):
@@ -191,24 +191,24 @@ class Environment:
                     fed = 1
                 else:
                     fed = -1
-                if tile[2] == 1 and (not tile[0].hidden()):
-                    hurt = 1
-                else:
-                    hurt = -1
+                #if tile[2] == 1 and (not tile[0].hidden()):
+                #    hurt = 1
+                #else:
+                #    hurt = -1
                 sounds = self.soundHistory[i][j]
-                [make1, make2] = tile[0].timeCyle(sounds[0],sounds[1],fed,hurt)
+                make1 = tile[0].timeCyle(sounds[0],fed)
                 make1 = -1 if make1 <= 0 else 1
-                make2 = -1 if make2 <= 0 else 1
-                newSounds.append([i, j, make1, make2])
+                #make2 = -1 if make2 <= 0 else 1
+                newSounds.append([i, j, make1])
 
         for soundList in newSounds:
-            self.soundHistory[soundList[0]][soundList[1]] = [soundList[2], soundList[3]]
+            self.soundHistory[soundList[0]][soundList[1]] = [soundList[2]]
 
         #move food
         self.moveFood()
 
         #move predators
-        self.movePredators()
+        #self.movePredators()
 
     def getHealthiestNeighbor(self, row, col):
         """
