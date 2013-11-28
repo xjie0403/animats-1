@@ -84,12 +84,12 @@ class Animat:
         if hurt == 1:
             self.energy -= 1
         [openMouth, hide, make1, make2] = self.brain.activateNetworks([hear1, hear2, fed, hurt])
-        if(randint(0,99) < 5):
+        if(randint(0,99) < 3):
             self.openMouth = 1
         else:
             self.openMouth = openMouth
 
-        if(randint(0,99) < 5):
+        if(randint(0,99) < 3):
             self.hide = 1
         else:
             self.hide = hide
