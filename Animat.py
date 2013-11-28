@@ -78,7 +78,10 @@ class Animat:
     def hidden(self):
         return (self.hide > 0)
 
-    def timeCyle(self, hear1, heard2, fed):
+    def scaring(self):
+        return (self.scare > 0)
+
+    def timeCyle(self, hear1, hear2, fed):
         """
 
         @param inputs: a list of 4 floats (hear1, hear2, fed, hurt)
@@ -88,7 +91,7 @@ class Animat:
             self.energy += 1
         #if hurt == 1:
         #    self.energy -= 1
-        [openMouth, scare, make1, make2] = self.brain.activateNetworks([hear1, heard2, fed])
+        [openMouth, scare, make1, make2] = self.brain.activateNetworks([hear1, hear2, fed])
         if(randint(0,99) < 5):
             self.openMouth = 1
         else:
@@ -104,8 +107,8 @@ class Animat:
             self.energy -= 0.05
         if make1 == 1:
             self.energy -= 0.05
-        #if make2 == 1:
-        #    self.energy -= 0.05
+        if make2 == 1:
+            self.energy -= 0.05
 
         return [make1, make2]
 

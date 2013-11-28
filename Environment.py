@@ -11,6 +11,7 @@ class XYValues:
     def __init__(self):
         self.xValue = 0
         self.yValue = 0
+        self.scareCount = 0
 
     def setX(self, x):
         self.xValue = x
@@ -23,6 +24,18 @@ class XYValues:
 
     def getY(self):
         return self.yValue
+
+    def incScareCount(self):
+        self.scareCount += 1
+
+    def resetScareCount(self):
+        self.scareCount = 0
+
+    def maxScareCount(self):
+        return 5
+
+    def getScareCount(self):
+        return self.scareCount
 
     def getCoordinates(self):
         return "(" + str(self.xValue) + ", " + str(self.yValue) + ")"
@@ -47,7 +60,7 @@ class Environment:
                 print self.animats[i][j][0].getBehaviorString()
 
         # initialize sound images
-        self.soundHistory = [[[-1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
+        self.soundHistory = [[[-1,-1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
 
         #initialize food
         self.food = [XYValues() for k in range(self.numFood)]
@@ -121,12 +134,44 @@ class Environment:
         for j in self.predators:
             print j.getCoordinates()
 
+    def computeScares(self):
+        scaredFoods = 0
+        for foodObj in self.food:
+            #if(foodObj.getX() == 10 and foodObj.getY() == 10):
+                #print 'here'
+            if(self.checkNeighborScares(foodObj.getX(),foodObj.getY())):
+                #print "Food object "  + foodObj.getCoordinates() + " is scurrrred"
+                foodObj.incScareCount()
+                if(foodObj.getScareCount() > foodObj.maxScareCount()):
+                    foodObj.resetScareCount()
+                else:
+                    scaredFoods += 1
+            else:
+                foodObj.resetScareCount()
+        #print "{0} scared foods".format(scaredFoods)
+
+    def checkNeighborScares(self, row, col):
+        for i in range(-1,2):
+            for j in range(-1,2):
+                if row + i >= len(self.animats):
+                    i -= len(self.animats) + 1
+                if col + j >= len(self.animats[i]):
+                    j -= len(self.animats[i]) + 1
+                if(not self.animats[row][col][0].scaring()):
+                    return False
+        return True
+
     def moveFood(self):
         #remove food in tiles
         self.removeFoodInTiles()
 
+        # go through and increment scare counts on food objects that are scared, resetting if necessary
+        self.computeScares()
         #generate new positions in the food list
         for i in self.food:
+            if(i.getScareCount() > 0):
+                continue
+
             tempX = random.randint(-1, 1)
             if i.getX() == self.environmentSize - 1 and tempX == 1:
                 i.setX(0)
@@ -213,17 +258,20 @@ class Environment:
                 #else:
                 #    hurt = -1
                 sounds = self.soundHistory[i][j]
-                [make1] = tile[0].timeCyle(sounds[0],fed)
+                [make1, make2] = tile[0].timeCyle(sounds[0], sounds[1], fed)
                 make1 = -1 if make1 <= 0 else 1
+                make2 = -1 if make1 <= 0 else 1
                 #make2 = -1 if make2 <= 0 else 1
-                newSounds.append([i, j, make1])
+                newSounds.append([i, j, make1, make2])
 
-        self.soundHistory = [[[-1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
+        self.soundHistory = [[[-1, -1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
         for soundList in newSounds:
             if soundList[2] == 1:
                 #print "sound made"
-                self.propagateSound(soundList[0],soundList[1])
+                self.propagateSound(soundList[0],soundList[1],0)
                 #self.soundHistory[soundList[0]][soundList[1]] = [soundList[2]]
+            if(soundList[3] == 1):
+                self.propagateSound(soundList[0],soundList[1],1)
 
         #move food
         self.moveFood()
@@ -231,14 +279,14 @@ class Environment:
         #move predators
         #self.movePredators()
 
-    def propagateSound(self, row, col):
+    def propagateSound(self, row, col, soundnum):
         for i in range(-1,2):
             for j in range(-1,2):
                 if row + i >= len(self.animats):
                     i -= len(self.animats) + 1
                 if col + j >= len(self.animats[i]):
                     j -= len(self.animats[i]) + 1
-                self.soundHistory[row + i][col + j] = [1]
+                self.soundHistory[row + i][col + j][soundnum] = 1
 
     def getHealthiestNeighbor(self, row, col):
         """
