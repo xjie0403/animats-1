@@ -9,8 +9,8 @@ class Animat:
     def __init__(self):
         self.brain = BrainController()
         self.energy = 100
-        self.openMouth = 0
-        self.hide = 0
+        self.openMouth = -1
+        self.scare = -1
 
     def train(self, animatInputs, animatOutputs):
         """
@@ -32,15 +32,20 @@ class Animat:
         return error
 
     def getBehaviorString(self):
-        dataInputs = [(-1),(1)]
+        auditoryInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        vocalInputs = [[-1],[1]]
         auditoryStrategy = ""
         vocalStrategy = ""
-        for i in range(len(dataInputs)):
-            input = [dataInputs[i]]
+        for i in range(len(auditoryInputs)):
+            input = auditoryInputs[i]
             aOut = map(lambda x: 0 if x <= 0 else 1, self.brain.activateAuditory(input))
+            auditoryStrategy += ''.join(map(str,aOut))
+
+        for i in range(len(vocalInputs)):
+            input = vocalInputs[i]
             vOut = map(lambda x: 0 if x <= 0 else 1, self.brain.activateVocal(input))
-            auditoryStrategy += str(aOut[0])
-            vocalStrategy += str(vOut[0])
+            vocalStrategy += ''.join(map(str,vOut))
+
         return auditoryStrategy + " " + vocalStrategy
 
     def getTrainingData(self):
@@ -57,13 +62,13 @@ class Animat:
             #inputs.append(input)
             #outputs.append(output)
             dataInput = []
-            for j in range(2):
+            for j in range(3):
                 dataInput.append(-1 if randint(0,1) == 0 else 1)
-            auditoryInputs.append(dataInput[0:1])
-            vocalInputs.append(dataInput[1:2])
+            auditoryInputs.append(dataInput[0:2])
+            vocalInputs.append(dataInput[2:3])
             o = self.brain.activateNetworks(dataInput)
-            auditoryOutputs.append([o[0]])
-            vocalOutputs.append([o[1]])
+            auditoryOutputs.append(o[0:2])
+            vocalOutputs.append(o[2:4])
 
         return [AnimatInputs(auditoryInputs,vocalInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
 
@@ -73,7 +78,7 @@ class Animat:
     def hidden(self):
         return (self.hide > 0)
 
-    def timeCyle(self, hear1, fed):
+    def timeCyle(self, hear1, heard2, fed):
         """
 
         @param inputs: a list of 4 floats (hear1, hear2, fed, hurt)
@@ -83,27 +88,26 @@ class Animat:
             self.energy += 1
         #if hurt == 1:
         #    self.energy -= 1
-        [openMouth, make1] = self.brain.activateNetworks([hear1, fed])
+        [openMouth, scare, make1, make2] = self.brain.activateNetworks([hear1, heard2, fed])
         if(randint(0,99) < 5):
             self.openMouth = 1
         else:
             self.openMouth = openMouth
 
-        #if(randint(0,99) < 5):
-        #    self.hide = 1
-        #else:
-        #    self.hide = hide
+        self.scare = scare
 
         if self.openMouth == 1:
             self.energy -= 0.05
         #if self.hide == 1:
         #    self.energy -= 0.05
+        if self.scare == 1:
+            self.energy -= 0.05
         if make1 == 1:
             self.energy -= 0.05
         #if make2 == 1:
         #    self.energy -= 0.05
 
-        return [make1]
+        return [make1, make2]
 
     def getSummaryString(self):
         return 'Behavior string: {0}, Energy: {1}'.format(self.getBehaviorString(),self.energy)

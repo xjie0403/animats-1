@@ -24,13 +24,15 @@ class Perceptron:
             for i in range(len(self.weights)):
                 self.weights[i] = self.weights[i] + target * inputs[i]
             self.biasWeight = self.biasWeight + target
-            return self.activate(inputs)
+            return abs(self.activate(inputs) - target)
 
 class BrainController:
     def __init__(self):
         self.mouthPerceptron = Perceptron(1)
         #self.hidePerceptron = Perceptron(2)
         self.make1Perceptron = Perceptron(1)
+        self.make2Perceptron = Perceptron(1)
+        self.scarePerceptron = Perceptron(1)
         #self.make2Perceptron = Perceptron(2)
 
     def trainAuditory(self, inputs, targets, **kwargs):
@@ -44,7 +46,8 @@ class BrainController:
         sum = 0
         for i in range(len(inputs)):
             target = targets[i]
-            sum += abs(self.mouthPerceptron.train(inputs[i],target[0]))
+            sum += abs(self.mouthPerceptron.train(inputs[i][0:1],target[0]))
+            sum += abs(self.scarePerceptron.train(inputs[i][1:2],target[1]))
             #sum += abs(self.hidePerceptron.train(inputs[i],target[1]))
         return sum
 
@@ -60,6 +63,7 @@ class BrainController:
         for i in range(len(inputs)):
             target = targets[i]
             sum += abs(self.make1Perceptron.train(inputs[i],target[0]))
+            sum += abs(self.make2Perceptron.train(inputs[i],target[1]))
             #sum += abs(self.make2Perceptron.train(inputs[i],target[1]))
         return sum
 
@@ -70,12 +74,12 @@ class BrainController:
         @return: a list of 4 integers (openMouth, hide, make1, make2)
         """
 
-        return self.activateAuditory(inputs[0:1]) + self.activateVocal(inputs[1:2])
+        return self.activateAuditory(inputs[0:2]) + self.activateVocal(inputs[2:3])
 
     def activateAuditory(self, inputs): # inputs is a list of 2 numbers
-        output = [self.mouthPerceptron.activate(inputs)]#, self.hidePerceptron.activate(inputs)]
+        output = [self.mouthPerceptron.activate(inputs[0:1]), self.scarePerceptron.activate(inputs[1:2])]
         return output
 
-    def activateVocal(self, inputs): # inputs is a list of 2 numbers
-        output = [self.make1Perceptron.activate(inputs)]#, self.make2Perceptron.activate(inputs)]
+    def activateVocal(self, inputs): # inputs is a list of 1 numbers
+        output = [self.make1Perceptron.activate(inputs), self.make2Perceptron.activate(inputs)]
         return output

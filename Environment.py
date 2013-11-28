@@ -64,21 +64,36 @@ class Environment:
 
 
     def trainPerfect(self, animat, strat=1):
-        sampInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
-        ind = [0, 1, 2, 3]
-        random.shuffle(ind)
+        auditoryInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        vocalInputs = [[-1],[1]]
+        #audInd = [0, 1, 2, 3]
+        #vocInd = [0,1]
         if(strat == 1):
             #sampOutputs = [(0,0),(0,1),(1,0),(1,1)]
-            sampOutputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+            audOutputDict = {'-1-1': [-1,-1],
+                             '-11': [-1,1],
+                             '1-1': [1,-1],
+                             '11': [1,1]}
+            vocOutputDict = {'-1':[-1,-1],'1':[1,1]}
+            #sampOutputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         else:
             #sampOutputs = [(0,0),(1,0),(0,1),(1,1)]
             sampOutputs = [(-1,-1),(1,-1),(-1,1),(1,1)]
 
         error = 1
         while(error > 0.05):
-            sampInputs = [ sampInputs[i] for i in ind]
-            sampOutputs = [ sampOutputs[i] for i in ind]
-            error = animat.train(AnimatInputs(sampInputs*50,sampInputs*50), AnimatOutputs(sampOutputs*50,sampOutputs*50))
+            audInputs = []
+            vocInputs = []
+            audOutputs = []
+            vocOutputs = []
+            for i in auditoryInputs:
+                for j in vocalInputs:
+                    audInputs.append(i)
+                    vocInputs.append(j)
+                    audOutputs.append(audOutputDict[''.join(map(str,i))])
+                    vocOutputs.append(vocOutputDict[''.join(map(str,j))])
+
+            error = animat.train(AnimatInputs(audInputs,vocInputs), AnimatOutputs(audOutputs,vocOutputs))
             #print error
 
 
