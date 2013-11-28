@@ -205,7 +205,8 @@ class Environment:
 
         self.soundHistory = [[[-1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
         for soundList in newSounds:
-            if make1 == 1:
+            if soundList[2] == 1:
+                #print "sound made"
                 self.propagateSound(soundList[0],soundList[1])
                 #self.soundHistory[soundList[0]][soundList[1]] = [soundList[2]]
 
