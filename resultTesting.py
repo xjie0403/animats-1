@@ -5,6 +5,12 @@ environment.trainPerfectBlock(10,12,10,12)
 testN = 5
 for century in range(300):
     print "Beginning century {0}".format(century)
+
+    cnt = environment.getBehaviors()
+    print cnt.most_common(10)
+    print cnt['00011011 0011']
+    #print cnt['01 01']
+
     for round in range(100):
         environment.timeCycle()
     print environment.animats[testN][testN][0].getSummaryString() + "\t\t" + environment.animats[testN+1][testN][0].getSummaryString()
@@ -23,6 +29,3 @@ for century in range(300):
         print "(11,10) neighbor: " + environment.getHealthiestNeighbor(testN+1,testN).getSummaryString()
     #print environment.getHealthiestNeighbor(10,10).getSummaryString() + "\t\t" + environment.getHealthiestNeighbor(11,10).getSummaryString() + "\n"
 
-    print cnt.most_common(10)
-    print cnt['00011011 0011']
-    #print cnt['01 01']
