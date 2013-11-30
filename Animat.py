@@ -82,7 +82,7 @@ class Animat:
         return (self.scare > 0)
 
     def feed(self):
-        self.energy += 15
+        self.energy += 10
 
     def timeCyle(self, hear1, nearby, fed):
         """

@@ -149,15 +149,44 @@ class Environment:
         #print "{0} scared foods".format(scaredFoods)
 
     def checkNeighborScares(self, row, col):
+        # keep a table of the scares, so that we can see if we have a full row or col
+        scareTable = []
+
+        # keep the number of neighbor scarers. If over a certain threshold we will freeze
+        neighborScares = 0
+
+        # THIS WORKS WITH EITHER METHOD. Either number of scarers or the table (do you want to restrict to a certain row/col of scarers, or just raw total?)
+
         for i in range(-1,2):
+            scareTable.append([])
+            #neighborScares = 0
             for j in range(-1,2):
                 if row + i >= len(self.animats):
                     i -= len(self.animats) + 1
                 if col + j >= len(self.animats[i]):
                     j -= len(self.animats[i]) + 1
-                if(not self.animats[row + i][col + j][0].scaring()):
-                    return False
-        return True
+                if(self.animats[row+i][col+j][0].scaring()):
+                    neighborScares += 1
+                    if(neighborScares >= 3):
+                        return True
+                scareTable[-1].append(self.animats[row+i][col+j][0].scaring())
+        return False
+
+        # go through and talley each row/col, to see if we have a full row of scarers.
+
+        # don't count the animat itself. We want a row/col of 3 not including itself.
+        scareTable[1][1] = False
+        for i in range(-1,2):
+            vertScares = 0
+            horizScares = 0
+            for j in range(-1,2):
+                if(scareTable[i][j] == True):
+                    vertScares += 1
+                if(scareTable[j][i] == True):
+                    horizScares += 1
+                if(vertScares >= 3 or horizScares >= 3):
+                    return True
+        return False
 
     def moveFood(self):
         #remove food in tiles
@@ -303,7 +332,7 @@ class Environment:
                     i -= len(self.animats) + 1
                 if col + j >= len(self.animats[i]):
                     j -= len(self.animats[i]) + 1
-                if(self.animats[i][j][1] == 1):
+                if(self.animats[row+i][col+j][1] == 1):
                     return True
         return False
 

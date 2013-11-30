@@ -1,7 +1,7 @@
 from Environment import *
 
 environment = Environment()
-environment.trainPerfectBlock(5,12,5,12)
+#environment.trainPerfectBlock(11,12,11,12)
 testN = 11
 for century in range(300):
     print "Beginning century {0}".format(century)
