@@ -167,14 +167,12 @@ class Environment:
                     i -= len(self.animats) + 1
                 if col + j >= len(self.animats[i]):
                     j -= len(self.animats[i]) + 1
-                if(self.animats[row+i][col+j][0].scaring()):
-                    neighborScares += 1
-                    if(neighborScares >= 3):
-                        return True
-                #if(not self.animats[row+i][col+j][0].scaring()):
-                #    return False
+                #if(self.animats[row+i][col+j][0].scaring()):
+                #    neighborScares += 1
+                #    if(neighborScares >= 3):
+                #        return True
                 scareTable[-1].append(self.animats[row+i][col+j][0].scaring())
-        return False
+        #return False
 
         # go through and talley each row/col, to see if we have a full row of scarers.
 
