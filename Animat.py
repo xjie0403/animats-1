@@ -32,7 +32,7 @@ class Animat:
         return error
 
     def getBehaviorString(self):
-        auditoryInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
+        auditoryInputs = [[-1],[1]]
         vocalInputs = [[-1],[1]]
         auditoryStrategy = ""
         vocalStrategy = ""
@@ -62,13 +62,13 @@ class Animat:
             #inputs.append(input)
             #outputs.append(output)
             dataInput = []
-            for j in range(3):
+            for j in range(2):
                 dataInput.append(-1 if randint(0,1) == 0 else 1)
-            auditoryInputs.append(dataInput[0:2])
-            vocalInputs.append(dataInput[2:3])
+            auditoryInputs.append(dataInput[0:1])
+            vocalInputs.append(dataInput[1:2])
             o = self.brain.activateNetworks(dataInput)
-            auditoryOutputs.append(o[0:2])
-            vocalOutputs.append(o[2:4])
+            auditoryOutputs.append(o[0:1])
+            vocalOutputs.append(o[1:3])
 
         return [AnimatInputs(auditoryInputs,vocalInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
 
@@ -81,36 +81,37 @@ class Animat:
     def scaring(self):
         return (self.scare > 0)
 
-    def timeCyle(self, hear1, hear2, fed):
+    def feed(self):
+        self.energy += 15
+
+    def timeCyle(self, hear1, nearby, fed):
         """
 
         @param inputs: a list of 4 floats (hear1, hear2, fed, hurt)
         @return: nothing #a list of 4 integers (openMouth, hide, make1, make2)
         """
         if fed == 1:
-            self.energy += 1
+            self.feed()
         #if hurt == 1:
         #    self.energy -= 1
-        [openMouth, scare, make1, make2] = self.brain.activateNetworks([hear1, hear2, fed])
+        [scare, make1, openMouth] = self.brain.activateNetworks([hear1, nearby])
         if(randint(0,99) < 5):
-            self.openMouth = 1
+            self.scare = 1
         else:
-            self.openMouth = openMouth
+            self.scare = scare
 
-        self.scare = scare
-
-        if self.openMouth == 1:
-            self.energy -= 0.05
+        if openMouth == 1:
+            self.energy -= 0.5
         #if self.hide == 1:
         #    self.energy -= 0.05
         if self.scare == 1:
             self.energy -= 0.05
         if make1 == 1:
             self.energy -= 0.05
-        if make2 == 1:
-            self.energy -= 0.05
+        #if make2 == 1:
+        #    self.energy -= 0.05
 
-        return [make1, make2]
+        return [make1]
 
     def getSummaryString(self):
         return 'Behavior string: {0}, Energy: {1}'.format(self.getBehaviorString(),self.energy)
