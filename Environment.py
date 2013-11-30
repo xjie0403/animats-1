@@ -151,15 +151,18 @@ class Environment:
         #print "{0} scared foods".format(scaredFoods)
 
     def checkNeighborScares(self, row, col):
+        neighborScares = 0
         for i in range(-1,2):
             for j in range(-1,2):
                 if row + i >= len(self.animats):
                     i -= len(self.animats) + 1
                 if col + j >= len(self.animats[i]):
                     j -= len(self.animats[i]) + 1
-                if(not self.animats[row][col][0].scaring()):
-                    return False
-        return True
+                if(self.animats[row+i][col+j][0].scaring()):
+                    neighborScares += 1
+                #if(not self.animats[row+i][col+j][0].scaring()):
+                #    return False
+        return neighborScares >= 3
 
     def moveFood(self):
         #remove food in tiles
