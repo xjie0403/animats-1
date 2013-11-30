@@ -36,33 +36,35 @@ for century in range(400):
     #print cnt['00011011 00011011']
     #print cnt['00100111 00100111']
 
-lastCenturyBehaviors = cntArray[numCenturies-1]
-behaviors = []
+def createCSV():
+    lastCenturyBehaviors = cntArray[numCenturies-1]
+    behaviors = []
 
-for i in list(lastCenturyBehaviors):
-    behaviors.append(i)
+    for i in list(lastCenturyBehaviors):
+        behaviors.append(i)
 
-results = [[] for i in range(len(behaviors))]
+    results = [[] for i in range(len(behaviors))]
 
-resultsCounter = 0
-for i in cntArray:
-    tempListOfBehaviors = list(i)
-    behaviorCounter = 0
-    for j in behaviors:
-        if j in tempListOfBehaviors:
-            results[behaviorCounter].append(i[j])
-        else:
-            results[behaviorCounter].append(0)
-        behaviorCounter = behaviorCounter +1
+    resultsCounter = 0
+    for i in cntArray:
+        tempListOfBehaviors = list(i)
+        behaviorCounter = 0
+        for j in behaviors:
+            if j in tempListOfBehaviors:
+                results[behaviorCounter].append(i[j])
+            else:
+                results[behaviorCounter].append(0)
+            behaviorCounter = behaviorCounter +1
 
-csvMatrix = zip(*results)
+    csvMatrix = zip(*results)
 
-with open('results.csv','wb') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(behaviors)
-        count = 0
-        for i in csvMatrix:
-            writer.writerow(csvMatrix[count])
-            count = count + 1
+    with open('results.csv','wb') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(behaviors)
+            count = 0
+            for i in csvMatrix:
+                writer.writerow(csvMatrix[count])
+                count = count + 1
 
 
+createCSV()
