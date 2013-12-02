@@ -1,13 +1,22 @@
 from Environment import *
 import csv
+from CreateImage import *
 
 environment = Environment()
+createImage = CreateImage()
 environment.trainPerfectBlock(10,12,10,12)
 testN = 5
 cntArray = []
-numCenturies = 0
+numCenturies = 400
 
-for century in range(400):
+def calculateWhenToSaveImage(centuries):
+    #change the number of images here!
+    images = 5
+    return centuries/(images-1)
+
+savePoint = calculateWhenToSaveImage(numCenturies)
+
+for century in range(numCenturies):
     print "Beginning century {0}".format(century)
     for round in range(100):
         environment.timeCycle()
@@ -22,6 +31,13 @@ for century in range(400):
 
     #each count object is added to an array
     cntArray.append(cnt)
+    imageBehaviors = []
+
+    if ((century+1) % savePoint == 0) or (century == 0):
+        for i in list(cntArray[century]):
+            imageBehaviors.append(i)
+
+        createImage.createBMP("animatAtCentury"+ str(century) +".bmp", environment.animats, imageBehaviors)
 
     print environment.animats[testN][testN][0].getSummaryString() + "\t\t" + environment.animats[testN+1][testN][0].getSummaryString()
     if (environment.getHealthiestNeighbor(testN,testN)):
@@ -32,7 +48,7 @@ for century in range(400):
 
     print cnt.most_common(10)
     print cnt['01 01']
-    numCenturies = numCenturies +1
+    #numCenturies = numCenturies +1
     #print cnt['00011011 00011011']
     #print cnt['00100111 00100111']
 
@@ -65,6 +81,7 @@ def createCSV():
             for i in csvMatrix:
                 writer.writerow(csvMatrix[count])
                 count = count + 1
-
+    #temporarily return list of behaviors for image
+    #return behaviors
 
 createCSV()
