@@ -7,7 +7,9 @@ class CreateImage:
 
     def createBMP(self, fileName, animats, behaviors):
 
-        self.createBehaviorDictionary(behaviors)
+        newBehaviors = self.setBestBehaviorAsLastElement(behaviors)
+
+        self.createBehaviorDictionary(newBehaviors)
 
         #create a white image
         img = Image.new('RGB', (len(animats), len(animats)), "white")
@@ -23,22 +25,24 @@ class CreateImage:
                 yLocation = yLocation + 1
             xLocation = xLocation + 1
 
-
-        '''
-        for i in range(25):    # for every pixel:
-            for j in range(50):
-                pixels[i,j] = (0, 0, 0) # set the colour accordingly
-        '''
-
         img.save(fileName)
+
+    def setBestBehaviorAsLastElement(self, behaviors):
+
+        if '01 01' in behaviors:
+            behaviors.append(behaviors.pop(behaviors.index('01 01')))
+
+        return behaviors
+
 
     def createBehaviorDictionary(self, behaviors):
 
-        colorVariation = 255/len(behaviors)
+        colorVariation = 255/(len(behaviors)-1)
 
-        #print "color variation: " + str(colorVariation)
+        print "color variation: " + str(colorVariation)
 
         counter = 0
+
         for behavior in behaviors:
             self.behaviorDict[behavior] = counter
             counter = counter + colorVariation
