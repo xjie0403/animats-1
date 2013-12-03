@@ -36,12 +36,12 @@ for century in range(numCenturies):
     print cnt['00100111 00100111']
 
 def createCSV():
-    lastCenturyBehaviors = cntArray[numCenturies-1]
+    lastCenturyBehaviors = cntArray[numCenturies-1].most_common(10)
 
     behaviors = []
 
-    for i in list(lastCenturyBehaviors):
-        behaviors.append(i)
+    for i in lastCenturyBehaviors:
+        behaviors.append(i[0])
 
     results = [[] for i in range(len(behaviors))]
 
