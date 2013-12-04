@@ -31,9 +31,9 @@ class XYValues:
 class Environment:
 
     def __init__(self):
-        self.environmentSize = 64
-        self.numFood = 100
-        self.numPredators = 200
+        self.environmentSize = 32
+        self.numFood = 25
+        self.numPredators = 50
         self.animats = []
         self.soundHistory = []
         for i in range(self.environmentSize):
