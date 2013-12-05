@@ -1,0 +1,2 @@
+The behavior: 00100111 00100111 has an RGB of: 0 - black
+The behavior: 00011011 00011011 has an RGB of: 256 - white
