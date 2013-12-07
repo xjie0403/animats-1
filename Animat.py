@@ -68,7 +68,7 @@ class Animat:
             vocalInputs.append(dataInput[1:2])
             o = self.brain.activateNetworks(dataInput)
             auditoryOutputs.append(o[0:1])
-            vocalOutputs.append(o[1:3])
+            vocalOutputs.append(o[1:2])
 
         return [AnimatInputs(auditoryInputs,vocalInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
 
@@ -94,14 +94,14 @@ class Animat:
             self.feed()
         #if hurt == 1:
         #    self.energy -= 1
-        [scare, make1, openMouth] = self.brain.activateNetworks([hear1, nearby])
-        if(randint(0,99) < 5):
-            self.scare = 1
-        else:
-            self.scare = scare
+        [scare, make1] = self.brain.activateNetworks([hear1, nearby])
+        #if(randint(0,99) < 5):
+        #    self.scare = 1
+        #else:
+        self.scare = scare
 
-        if openMouth == 1:
-            self.energy -= 0.5
+        #if openMouth == 1:
+        #    self.energy -= 0.5
         #if self.hide == 1:
         #    self.energy -= 0.05
         if self.scare == 1:

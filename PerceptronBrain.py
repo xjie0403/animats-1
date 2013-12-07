@@ -28,7 +28,6 @@ class Perceptron:
 
 class BrainController:
     def __init__(self):
-        self.mouthPerceptron = Perceptron(1)
         #self.hidePerceptron = Perceptron(2)
         self.make1Perceptron = Perceptron(1)
         #self.make2Perceptron = Perceptron(1)
@@ -63,7 +62,6 @@ class BrainController:
         for i in range(len(inputs)):
             target = targets[i]
             sum += abs(self.make1Perceptron.train(inputs[i],target[0]))
-            sum += abs(self.mouthPerceptron.train(inputs[i],target[1]))
             #sum += abs(self.make2Perceptron.train(inputs[i],target[1]))
         return sum
 
@@ -81,5 +79,5 @@ class BrainController:
         return output
 
     def activateVocal(self, inputs): # inputs is a list of 1 numbers
-        output = [self.make1Perceptron.activate(inputs), self.mouthPerceptron.activate(inputs)]
+        output = [self.make1Perceptron.activate(inputs)]
         return output

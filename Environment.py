@@ -45,7 +45,7 @@ class Environment:
 
     def __init__(self):
         self.environmentSize = 32 #32 #64
-        self.numFood = 25 #25 #100
+        self.numFood = 10 #25 #100
         self.numPredators = 0 #50 #200
         self.animats = []
         self.soundHistory = []
@@ -85,7 +85,7 @@ class Environment:
             #sampOutputs = [(0,0),(0,1),(1,0),(1,1)]
             audOutputDict = {'-1': [-1],
                              '1': [1]}
-            vocOutputDict = {'-1':[-1,-1],'1':[1,-1]}
+            vocOutputDict = {'-1':[-1],'1':[1]}
             #sampOutputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         else:
             #sampOutputs = [(0,0),(1,0),(0,1),(1,1)]
@@ -384,7 +384,7 @@ class Environment:
         for i in range(self.environmentSize):
             for j in range(self.environmentSize):
                 individual = self.animats[i][j][0]
-                neighborData = trainingData[i][j];
+                neighborData = trainingData[i][j]
                 if neighborData:
                     individual.train(*neighborData)
 
