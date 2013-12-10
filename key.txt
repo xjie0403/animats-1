@@ -1,0 +1,1 @@
+The behavior: 01 01 has an RGB of: (256, 256, 256) - white
