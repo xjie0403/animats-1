@@ -7,15 +7,25 @@ createImage = CreateImage()
 environment.trainPerfectBlock(10,12,10,12)
 testN = 5
 cntArray = []
-numCenturies = 400
+numCenturies = 500
 
+'''
+----------------------------------
+ResultTesting File
+This file acts as a controller for the entire program
+----------------------------------
+'''
+
+#calculates when to save an image pased on the number of images
 def calculateWhenToSaveImage(centuries):
     #change the number of images here!
     images = 5
     return centuries/(images-1)
 
+#sets the save point in the iteration based on the value from calculateWhenToSaveImage method
 savePoint = calculateWhenToSaveImage(numCenturies)
 
+#for loop is used to call each timeCycle in the environment
 for century in range(numCenturies):
     print "Beginning century {0}".format(century)
     for round in range(100):
@@ -52,6 +62,11 @@ for century in range(numCenturies):
     #print cnt['00011011 00011011']
     #print cnt['00100111 00100111']
 
+''''
+function which creates a CSV file once the program is complete
+the CSV file creates columns for each behavior and the number of
+occures based on the century
+'''
 def createCSV():
     lastCenturyBehaviors = cntArray[numCenturies-1]
     behaviors = []
@@ -84,4 +99,5 @@ def createCSV():
     #temporarily return list of behaviors for image
     #return behaviors
 
+#call to the createCSV function
 createCSV()

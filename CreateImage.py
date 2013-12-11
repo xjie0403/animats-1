@@ -1,10 +1,17 @@
 import Image
 
+'''
+----------------------------------
+CreateImage Class
+This class creates an image based on the animats behavior
+----------------------------------
+'''
 class CreateImage:
 
     def __init__(self):
         self.behaviorDict = dict()
 
+    #creates a bmp image based on the fileName, the animates behaviors
     def createBMP(self, fileName, animats, behaviors):
 
         newBehaviors = self.setBestBehaviorAsLastElement(behaviors)
@@ -27,6 +34,8 @@ class CreateImage:
 
         img.save(fileName)
 
+    #sets the best behavior as the last element in the list
+    #so that it will be colored white
     def setBestBehaviorAsLastElement(self, behaviors):
 
         if '01 01' in behaviors:
@@ -34,7 +43,8 @@ class CreateImage:
 
         return behaviors
 
-
+    #creates a behavior dictionary where each behavior is the key
+    #and the color is the entry
     def createBehaviorDictionary(self, behaviors):
 
         colorVariation = 255/(len(behaviors)-1)
@@ -47,6 +57,7 @@ class CreateImage:
             self.behaviorDict[behavior] = counter
             counter = counter + colorVariation
 
+    #paints the pixel based on the behavior
     def paintPixel(self, behaviorString, x, y, pixels):
         pixels[x,y] = (self.behaviorDict[behaviorString], self.behaviorDict[behaviorString], self.behaviorDict[behaviorString])
         #print "printing pixel with RGB: " + str(self.behaviorDict[behaviorString])

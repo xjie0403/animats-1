@@ -5,6 +5,12 @@ from random import shuffle, randint
 AnimatInputs = namedtuple('AnimatInputs', ['auditoryInputs', 'vocalInputs'])
 AnimatOutputs = namedtuple('AnimatOutputs',['auditoryOutputs','vocalOutputs'])
 
+'''
+----------------------------------
+Animat Class
+This class defines each animat object
+----------------------------------
+'''
 class Animat:
     def __init__(self):
         self.brain = BrainController()
@@ -12,6 +18,8 @@ class Animat:
         self.openMouth = 0
         self.hide = 0
 
+    #takes the animatInputs and animatOutputs as parameters
+    #adds the inputs and outputs to a list and computes the error
     def train(self, animatInputs, animatOutputs):
         """
         @param animatInputs: an AnimatInput object to train on
@@ -31,6 +39,7 @@ class Animat:
         error += self.brain.trainVocal(vocalInputs, vocalOutputs, momentum=0.99)
         return error
 
+    #returns the auditory and vocal strategy
     def getBehaviorString(self):
         dataInputs = [(-1),(1)]
         auditoryStrategy = ""
@@ -43,6 +52,7 @@ class Animat:
             vocalStrategy += str(vOut[0])
         return auditoryStrategy + " " + vocalStrategy
 
+    #returns the inputs and outputs
     def getTrainingData(self):
         #dataInputs = [(0,0),(1,0),(0,1),(1,1)]
         #dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
@@ -67,12 +77,15 @@ class Animat:
 
         return [AnimatInputs(auditoryInputs,vocalInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
 
+    #returns true if the mouth is open
     def mouthOpen(self):
         return (self.openMouth > 0)
 
+    #returns hidden if the animat is hidden
     def hidden(self):
         return (self.hide > 0)
 
+    #method called each timestep and sets an animats attributes
     def timeCyle(self, hear1, fed):
         """
 
@@ -105,6 +118,7 @@ class Animat:
 
         return [make1]
 
+    #returns a string of behaviors
     def getSummaryString(self):
         return 'Behavior string: {0}, Energy: {1}'.format(self.getBehaviorString(),self.energy)
 
