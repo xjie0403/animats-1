@@ -151,8 +151,7 @@ class Environment:
             print j.getCoordinates()
 
     '''
-    Determines the animats who are scaring and orient the
-    food accordingly
+    Goes through each food object and determined whether it is scared or not
     '''
     def computeScares(self):
         scaredFoods = 0
@@ -167,7 +166,8 @@ class Environment:
                 foodObj.resetScareCount()
 
     '''
-    Returns whether a neighbor is giving the scare signal
+    Determines whether there are sufficient number of neighbors to the tile to scare the food object
+    Returns a boolean value
     '''
     def checkNeighborScares(self, row, col):
         # keep a table of the scares, so that we can see if we have a full row or col
@@ -218,7 +218,7 @@ class Environment:
 
         #generate new positions in the food list
         for i in self.food:
-            if(i.getScareCount() > 0):
+            if(i.getScareCount() > 0): # don't move the food if it is scared
                 continue
 
             tempX = random.randint(-1, 1)
