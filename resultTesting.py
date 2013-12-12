@@ -7,11 +7,11 @@ createImage = CreateImage()
 environment.trainPerfectBlock(10,12,10,12)
 testN = 5
 cntArray = []
-numCenturies = 200
+numCenturies = 500
 
 def calculateWhenToSaveImage(centuries):
     #change the number of images here!
-    images = 3
+    images = 5
     return centuries/(images-1)
 
 savePoint = calculateWhenToSaveImage(numCenturies)
