@@ -59,7 +59,7 @@ class CreateImage:
 
     def createBehaviorDictionary(self, behaviors):
 
-        colorVariation = 256/(len(behaviors)-1)
+        colorVariation = 241/(len(behaviors)-1)
 
         #print "HERE IS THE LEN OF BEHAVIORS: " + str(len(behaviors))
         #print "HERE IS THE COLOR VARIATION NUMBER: " + str(colorVariation)
@@ -68,11 +68,11 @@ class CreateImage:
 
         print "color variation: " + str(colorVariation)
 
-        counter = 0
+        counter = 15
 
         for behavior in behaviors:
             if colorVariation == 1:
-                colorNumber = (float(counter)/len(behaviors))*256.
+                colorNumber = (float(counter)/len(behaviors))*226.
                 self.behaviorDict[behavior] = int(colorNumber)
             else:
                 self.behaviorDict[behavior] = counter
