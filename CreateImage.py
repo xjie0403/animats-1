@@ -1,11 +1,20 @@
 import Image
 
+'''
+----------------------------------
+CreateImage Class
+This class creates an image based on the animats behavior
+----------------------------------
+'''
 class CreateImage:
 
     def __init__(self):
         self.behaviorDict = dict()
         self.perfectBehavior = '01 01'
 
+    '''
+    Creates a bmp image based on the fileName, the animates behaviors
+    '''
     def createBMP(self, fileName, animats, behaviors):
 
         (newBehaviors, bestBehavior, bestBehaviorRGB) = self.setBestBehaviorAsLastElement(behaviors)
@@ -30,6 +39,10 @@ class CreateImage:
 
         img.save(fileName)
 
+    '''
+    Sets the best behavior as the last element in the list
+    so that it will be colored white
+    '''
     def setBestBehaviorAsLastElement(self, behaviors):
 
         bestBehavior = ''
@@ -42,7 +55,10 @@ class CreateImage:
 
         return (behaviors, bestBehavior, bestBehaviorRGB)
 
-
+    '''
+    Creates a behavior dictionary where each
+    behavior is the key and the color is the entry
+    '''
     def createBehaviorDictionary(self, behaviors):
 
         colorVariation = 255/(len(behaviors)-1)
@@ -55,12 +71,19 @@ class CreateImage:
             self.behaviorDict[behavior] = counter
             counter = counter + colorVariation
 
+    '''
+    Paints the pixel based on the behavior
+    '''
     def paintPixel(self, behaviorString, x, y, pixels):
         if behaviorString in self.behaviorDict:
             pixels[x,y] = (self.behaviorDict[behaviorString], self.behaviorDict[behaviorString], self.behaviorDict[behaviorString])
         else:
             pixels[x,y] = (128,128,128)
 
+    '''
+    Creates a text file that lets the user know what color
+    a perfect behavior has been assigned
+    '''
     def createKey(self, bestBehavior, bestBehaviorRGB):
         output = open("key.txt", "w")
         output.write("The behavior: " + bestBehavior + " has an RGB of: (" + str(bestBehaviorRGB) +", "+ str(bestBehaviorRGB) +", " + str(bestBehaviorRGB) + ") - white\n")
