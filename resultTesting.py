@@ -2,16 +2,6 @@ from Environment import *
 import csv
 from CreateImage import *
 
-environment = Environment()
-createImage = CreateImage()
-
-environment.trainPerfectBlock(6,10,6,10,1)
-environment.trainPerfectBlock(21,25,21,25,2)
-
-testN = 9
-cntArray = []
-numCenturies = 500
-
 '''
 ----------------------------------
 ResultTesting File
@@ -19,8 +9,19 @@ This file acts as a controller for the entire program
 ----------------------------------
 '''
 
+environment = Environment()
+createImage = CreateImage()
+
+# setup an initial block of perfect communicators
+environment.trainPerfectBlock(6,10,6,10,1)
+environment.trainPerfectBlock(21,25,21,25,2)
+
+testN = 9 # for debugging. Select which animat to debug heavily
+cntArray = []
+numCenturies = 500
+
 '''
-calculates when to save an image pased on the number of images
+Calculates when to save an image pased on the number of images
 '''
 def calculateWhenToSaveImage(centuries):
     #change the number of images here!
@@ -28,23 +29,18 @@ def calculateWhenToSaveImage(centuries):
     return centuries/(images-1)
 
 '''
-sets the save point in the iteration based on the value
+Sets the save point in the iteration based on the value
 from calculateWhenToSaveImage method
 '''
 savePoint = calculateWhenToSaveImage(numCenturies)
 
 '''
-for loop is used to call each timeCycle in the environment
+For loop is used to call each timeCycle in the environment
 '''
 for century in range(numCenturies):
     print "Beginning century {0}".format(century)
     for round in range(100):
         environment.timeCycle()
-    print environment.animats[testN][testN][0].getSummaryString() + "\t\t" + environment.animats[testN+1][testN][0].getSummaryString()
-    if (environment.getHealthiestNeighbor(testN,testN)):
-        print "(10,10) neighbor: " + environment.getHealthiestNeighbor(testN,testN).getSummaryString()
-    if (environment.getHealthiestNeighbor(testN+1,testN)):
-        print "(11,10) neighbor: " + environment.getHealthiestNeighbor(testN+1,testN).getSummaryString()
 
     environment.trainCycle()
     cnt = environment.getBehaviors()
@@ -60,18 +56,9 @@ for century in range(numCenturies):
 
         createImage.createBMP("animatAtCentury"+ str(century) +".bmp", environment.animats, imageBehaviors)
 
-    print environment.animats[testN][testN][0].getSummaryString() + "\t\t" + environment.animats[testN+1][testN][0].getSummaryString()
-    if (environment.getHealthiestNeighbor(testN,testN)):
-        print "(10,10) neighbor: " + environment.getHealthiestNeighbor(testN,testN).getSummaryString()
-    if (environment.getHealthiestNeighbor(testN+1,testN)):
-        print "(11,10) neighbor: " + environment.getHealthiestNeighbor(testN+1,testN).getSummaryString()
-
-    print cnt.most_common(10)
-    print cnt['00011011 00011011']
-    print cnt['00100111 00100111']
 
 '''
-function which creates a CSV file once the program is complete
+Function which creates a CSV file once the program is complete
 the CSV file creates columns for each behavior and the number of
 occurs based on the century
 '''

@@ -19,8 +19,7 @@ class Animat:
         self.hide = 0
 
     '''
-    takes the animatInputs and animatOutputs as parameters and
-    adds the inputs and outputs to a list and computes the error
+    Trains the network with a given set of inputs and outputs
     @param animatInputs: an AnimatInput object to train on
     @param animatOutputs: an AnimatOutput object to train on
     '''
@@ -29,6 +28,8 @@ class Animat:
         auditoryOutputs = []
         vocalInputs = []
         vocalOutputs = []
+
+        # build the inputs and output lists to train on, from the animatInputs and animatOutputs tuples
         for i in range(len(animatInputs.auditoryInputs)):
             auditoryInputs.append(animatInputs.auditoryInputs[i])
             auditoryOutputs.append(animatOutputs.auditoryOutputs[i])
@@ -40,32 +41,39 @@ class Animat:
         return error
 
     '''
-    returns the auditory and vocal strategy
+    Returns the binary string that encodes the animat behavior
     '''
     def getBehaviorString(self):
         dataInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         auditoryStrategy = ""
         vocalStrategy = ""
+
+        # go through each possible input and get the outputs of the network
         for i in range(len(dataInputs)):
             input = dataInputs[i]
             aOut = map(lambda x: 0 if x <= 0 else 1, self.brain.activateAuditory(input))
             vOut = map(lambda x: 0 if x <= 0 else 1, self.brain.activateVocal(input))
             auditoryStrategy += str(aOut[0])+str(aOut[1])
             vocalStrategy += str(vOut[0])+str(vOut[1])
+
         return auditoryStrategy + " " + vocalStrategy
 
     '''
-    returns the inputs and outputs
+    Returns data that another animat can train on
     '''
     def getTrainingData(self):
+        # the training data that we're going to build
         auditoryInputs = []
         vocalInputs = []
         auditoryOutputs = []
         vocalOutputs = []
-        for i in range(4):
+
+        for i in range(4): # get four rounds of training data
             dataInput = []
             for j in range(4):
                 dataInput.append(-1 if randint(0,1) == 0 else 1)
+
+            # get the outputs for dataInput and add them to the output training data
             auditoryInputs.append(dataInput[0:2])
             vocalInputs.append(dataInput[2:4])
             o = self.brain.activateNetworks(dataInput)
@@ -75,21 +83,21 @@ class Animat:
         return [AnimatInputs(auditoryInputs,vocalInputs), AnimatOutputs(auditoryOutputs,vocalOutputs)]
 
     '''
-    returns true if the mouth is open
+    Returns true if the mouth is open
     '''
     def mouthOpen(self):
         return (self.openMouth > 0)
 
     '''
-    returns hidden if the animat is hidden
+    Returns true if the animat is hidden
     '''
     def hidden(self):
         return (self.hide > 0)
 
     '''
-    method called each timestep and sets an animats attributes
+    Method called each timestep and sets an animats attributes
     @param inputs: a list of 4 floats (hear1, hear2, fed, hurt)
-    @return: nothing #a list of 4 integers (openMouth, hide, make1, make2)
+    @return: A list of make1, make2; the sounds that were made by the animat
     '''
     def timeCyle(self, hear1, hear2, fed, hurt):
         if fed == 1:
@@ -97,6 +105,8 @@ class Animat:
         if hurt == 1:
             self.energy -= 1
         [openMouth, hide, make1, make2] = self.brain.activateNetworks([hear1, hear2, fed, hurt])
+
+        # Add randomness to the animat behavior
         if(randint(0,99) < 3):
             self.openMouth = 1
         else:
@@ -107,6 +117,7 @@ class Animat:
         else:
             self.hide = hide
 
+        # Enforce energy penalties
         if self.openMouth == 1:
             self.energy -= 0.05
         if self.hide == 1:
@@ -119,7 +130,7 @@ class Animat:
         return [make1, make2]
 
     '''
-    returns a string of behaviors
+    Returns a string that summarizes the animat: its current behavior and its energy. Used for debugging.
     '''
     def getSummaryString(self):
         return 'Behavior string: {0}, Energy: {1}'.format(self.getBehaviorString(),self.energy)

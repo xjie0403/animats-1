@@ -15,14 +15,11 @@ class BrainController:
     def _initializeNetwork(self, net):
         #bias = BiasUnit('bias')
         net.addInputModule(LinearLayer(2,'in'))
-        #net.addModule(SigmoidLayer(2,'hidden'))
         net.addOutputModule(SigmoidLayer(2,'out'))
         net.addModule(BiasUnit('bias'))
-        #net.addConnection(FullConnection(net['in'], net['hidden']))
         net.addConnection(FullConnection(net['in'], net['out']))
-        #net.addConnection(FullConnection(net['bias'],net['hidden']))
         net.addConnection(FullConnection(net['bias'],net['out']))
-        #net.addConnection(FullConnection(net['in'],net['out']))
+
         net.sortModules()
 
     def _train(self, inputs, outputs, net, **kwargs):
@@ -37,10 +34,6 @@ class BrainController:
 
         trainer = BackpropTrainer(net, ds, **kwargs)
         return trainer.train()
-
-    """
-    Most common kwargs are "verbose=True", "momentum=0.99"
-    """
 
     def trainAuditory(self, inputs, targets, **kwargs):
         """
