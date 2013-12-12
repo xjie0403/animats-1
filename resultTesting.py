@@ -4,7 +4,7 @@ from CreateImage import *
 
 environment = Environment()
 createImage = CreateImage()
-environment.trainPerfectBlock(10,12,10,12)
+
 testN = 5
 cntArray = []
 numCenturies = 500
