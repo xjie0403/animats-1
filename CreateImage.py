@@ -1,5 +1,11 @@
 import Image
 
+'''
+----------------------------------
+CreateImage Class
+This class creates an image based on the animats behavior
+----------------------------------
+'''
 class CreateImage:
 
     def __init__(self):
@@ -7,6 +13,9 @@ class CreateImage:
         self.perfectStrategy1 = '00011011 00011011'
         self.perfectStrategy2 = '00100111 00100111'
 
+    '''
+    creates a bmp image based on the fileName, the animates behaviors
+    '''
     def createBMP(self, fileName, animats, behaviors):
 
         (newBehaviors, bestBehavior1, bestBehavior1RGB, bestBehavior2, bestBehavior2RGB) = self.setBestBehaviors(behaviors)
@@ -14,9 +23,6 @@ class CreateImage:
         self.createKey(bestBehavior1, bestBehavior1RGB, bestBehavior2, bestBehavior2RGB)
 
         self.createBehaviorDictionary(newBehaviors)
-
-        #print "here's what's in the dict: "
-        #print self.behaviorDict
 
         #create a white image
         img = Image.new('RGB', (len(animats), len(animats)), "white")
@@ -34,6 +40,10 @@ class CreateImage:
 
         img.save(fileName)
 
+    '''
+    sets the best behavior as the last element in the list
+    so that it will be colored white
+    '''
     def setBestBehaviors(self, behaviors):
 
         bestBehavior1 = ''
@@ -56,13 +66,14 @@ class CreateImage:
 
         return (behaviors, bestBehavior1, bestBehavior1RGB, bestBehavior2, bestBehavior2RGB)
 
-
+    '''
+    creates a behavior dictionary where each
+    behavior is the key and the color is the entry
+    '''
     def createBehaviorDictionary(self, behaviors):
 
         colorVariation = 241/(len(behaviors)-1)
 
-        #print "HERE IS THE LEN OF BEHAVIORS: " + str(len(behaviors))
-        #print "HERE IS THE COLOR VARIATION NUMBER: " + str(colorVariation)
         if colorVariation == 0:
             colorVariation = 1
 
@@ -83,13 +94,19 @@ class CreateImage:
         if self.behaviorDict[self.perfectStrategy2] > 0:
             self.behaviorDict[self.perfectStrategy2] = 0
 
-
+    '''
+    paints the pixel based on the behavior
+    '''
     def paintPixel(self, behaviorString, x, y, pixels):
         if behaviorString in self.behaviorDict:
             pixels[x,y] = (self.behaviorDict[behaviorString], self.behaviorDict[behaviorString], self.behaviorDict[behaviorString])
         else:
             pixels[x,y] = (128,128,128)
 
+    '''
+    creates a text file that lets the user know what color
+    a perfect behavior has been assigned
+    '''
     def createKey(self, bestBehavior1, bestBehavior1RGB, bestBehavior2, bestBehavior2RGB):
         output = open("key.txt", "w")
         output.write("The behavior: " + bestBehavior1 + " has an RGB of: " + str(bestBehavior1RGB) + " - black\n")

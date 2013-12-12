@@ -4,8 +4,15 @@ import random
 from collections import Counter
 from Animat import Animat, AnimatOutputs, AnimatInputs
 
+'''
+----------------------------------
+XYValues Class
+This class is used as a helper to move food and predators in the
+environment. It was created to make movement easier using a
+simple coordinate system
+----------------------------------
+'''
 class XYValues:
-    
     xValue = 0
     yValue = 0
     def __init__(self):
@@ -27,9 +34,15 @@ class XYValues:
     def getCoordinates(self):
         return "(" + str(self.xValue) + ", " + str(self.yValue) + ")"
 
-
+'''
+----------------------------------
+Environment Class
+This class is used to construct the Environment. Animats, food, and
+predators are added here. The training methods for animats are called
+and inputs and outputs are passed to the Animat class
+----------------------------------
+'''
 class Environment:
-
     def __init__(self):
         self.environmentSize = 32
         self.numFood = 25
@@ -37,40 +50,45 @@ class Environment:
         self.animats = []
         self.soundHistory = []
         for i in range(self.environmentSize):
-            self.soundHistory.append([]) # [sig1 sig2]
+            self.soundHistory.append([])
             self.animats.append([])
             for j in range(self.environmentSize):
-                self.animats[i].append([Animat(), -1, -1]) # animat, food, predator
-                #self.soundHistory[i].append([-1, -1]) #sig1, sig2
-                #if i == 10 and j == 10:
-                #    self.trainPerfect(self.animats[i][j][0])
+                self.animats[i].append([Animat(), -1, -1])
                 print self.animats[i][j][0].getBehaviorString()
 
         #initialize sound history
         self.soundHistory = [[[-1, -1] for j in range(self.environmentSize)] for i in range(self.environmentSize)]
+
         #initialize food
         self.food = [XYValues() for k in range(self.numFood)]
+
+        #generate food for the first time
         self.generateRandomFood()
 
         #initialize predator
         self.predators = [XYValues() for l in range(self.numPredators)]
+
+        #generate predators for the first time
         self.generateRandomPredators()
 
+    '''
+    trains the initial perfect animats
+    '''
     def trainPerfectBlock(self, begrow, endrow, begcol, endcol, strat=1):
         for i in range(begrow, endrow+1):
             for j in range(begcol, endcol+1):
                 self.trainPerfect(self.animats[i][j][0],strat=strat)
 
-
+    '''
+    trains the perfect animats
+    '''
     def trainPerfect(self, animat, strat=1):
         sampInputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         ind = [0, 1, 2, 3]
         random.shuffle(ind)
         if(strat == 1):
-            #sampOutputs = [(0,0),(0,1),(1,0),(1,1)]
             sampOutputs = [(-1,-1),(-1,1),(1,-1),(1,1)]
         else:
-            #sampOutputs = [(0,0),(1,0),(0,1),(1,1)]
             sampOutputs = [(-1,-1),(1,-1),(-1,1),(1,1)]
 
         error = 1
@@ -80,7 +98,9 @@ class Environment:
             error = animat.train(AnimatInputs(sampInputs*50,sampInputs*50), AnimatOutputs(sampOutputs*50,sampOutputs*50))
             print error
 
-
+    '''
+    generates initial random food in the environment
+    '''
     def generateRandomFood(self):
         for i in self.food:
             i.setX(random.randint(0, self.environmentSize - 1))
@@ -93,6 +113,9 @@ class Environment:
         for j in self.food:
             print j.getCoordinates()
 
+    '''
+    generates initial random predators in the environment
+    '''
     def generateRandomPredators(self):
         for i in self.predators:
             i.setX(random.randint(0, self.environmentSize -1))
@@ -105,6 +128,9 @@ class Environment:
         for j in self.predators:
             print j.getCoordinates()
 
+    '''
+    moves the food randomly in one timestep
+    '''
     def moveFood(self):
         #remove food in tiles
         self.removeFoodInTiles()
@@ -130,10 +156,9 @@ class Environment:
         #set new food positions in the tiles
         self.setFoodInTiles()
 
-        #print "Here are the food coordinates after moving:"
-        #for k in self.food:
-        #    print k.getCoordinates()
-
+    '''
+    moves the predators randomly in one timestep
+    '''
     def movePredators(self):
         #remove predators in tiles
         self.removePredatorsInTiles()
@@ -159,30 +184,47 @@ class Environment:
         #set new predator positions in the tiles
         self.setPredatorsInTiles()
 
-        #print "Here are the predator coordinates after moving:"
-        #for k in self.predators:
-        #    print k.getCoordinates()
-
+    '''
+    helper method that removes all food in the array by setting
+    the values equal to -1
+    '''
     def removeFoodInTiles(self):
         for i in self.food:
             tile = self.animats[i.getX()][i.getY()]
             tile[1] = -1
 
+    '''
+    helper method that removes all predators in the array by setting
+    the values equal to -1
+    '''
     def removePredatorsInTiles(self):
         for i in self.predators:
             tile = self.animats[i.getX()][i.getY()]
             tile[2] = -1
 
+    '''
+    helper method that sets all the tiles to the values
+    in the food array
+    '''
     def setFoodInTiles(self):
         for i in self.food:
             tile = self.animats[i.getX()][i.getY()]
             tile[1] = 1
 
+    '''
+    helper method that sets all the tiles to the values
+    in the predator array
+    '''
     def setPredatorsInTiles(self):
         for i in self.predators:
             tile = self.animats[i.getX()][i.getY()]
             tile[2] = 1
 
+    '''
+    controls the functionality of the environment based
+    on the timeCycle this method is called per each timestep
+    and moves the food and sets an animats attributes
+    '''
     def timeCycle(self):
         newSounds = []
         for i in range(self.environmentSize):
@@ -208,7 +250,6 @@ class Environment:
                 self.propagateSound(soundList[0],soundList[1],0)
             if(soundList[3] == 1):
                 self.propagateSound(soundList[0],soundList[1],1)
-                #self.soundHistory[soundList[0]][soundList[1]] = [soundList[2], soundList[3]]
 
         #move food
         self.moveFood()
@@ -225,16 +266,17 @@ class Environment:
                     j -= len(self.animats[i]) + 1
                 self.soundHistory[row + i][col + j][soundnum] = 1
 
+    '''
+    returns the healthies animat neighbor
+    @rtype : Animat
+    '''
     def getHealthiestNeighbor(self, row, col):
-        """
-
-        @rtype : Animat
-        """
-        bestAnimat = self.animats[row][col][0] # current animat
+        bestAnimat = self.animats[row][col][0]
         maintain = True
         for i in range(-1,2):
             for j in range(-1,2):
-                if row + i >= len(self.animats): # wraparound if the index is too big (don't need to handle negative case)
+                # wraparound if the index is too big
+                if row + i >= len(self.animats):
                     i -= len(self.animats) + 1
                 if col + j >= len(self.animats[i]):
                     j -= len(self.animats[i]) + 1
@@ -247,8 +289,9 @@ class Environment:
         else:
             return False
 
-
-
+    '''
+    sets each animat depending on its neighbor
+    '''
     def trainCycle(self):
         trainingData = []
         for i in range(self.environmentSize):
@@ -268,6 +311,9 @@ class Environment:
                 if neighborData:
                     individual.train(*neighborData)
 
+    '''
+    returns the behaviors of the animats
+    '''
     def getBehaviors(self):
         cnt = Counter()
         for i in range(self.environmentSize):
@@ -275,9 +321,3 @@ class Environment:
                 cnt[self.animats[i][j][0].getBehaviorString()] += 1
 
         return cnt
-
-
-
-#environment = Environment()
-#environment.timeCycle()
-#environment.trainCycle()

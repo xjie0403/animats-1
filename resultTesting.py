@@ -6,24 +6,36 @@ environment = Environment()
 createImage = CreateImage()
 
 environment.trainPerfectBlock(6,10,6,10,1)
-
-#environment.trainPerfectBlock(26,30,26,30,2)
-#environment.trainPerfectBlock(56,60,56,60,2)
-
-#move black up
 environment.trainPerfectBlock(21,25,21,25,2)
 
 testN = 9
 cntArray = []
 numCenturies = 500
 
+'''
+----------------------------------
+ResultTesting File
+This file acts as a controller for the entire program
+----------------------------------
+'''
+
+'''
+calculates when to save an image pased on the number of images
+'''
 def calculateWhenToSaveImage(centuries):
     #change the number of images here!
     images = 5
     return centuries/(images-1)
 
+'''
+sets the save point in the iteration based on the value
+from calculateWhenToSaveImage method
+'''
 savePoint = calculateWhenToSaveImage(numCenturies)
 
+'''
+for loop is used to call each timeCycle in the environment
+'''
 for century in range(numCenturies):
     print "Beginning century {0}".format(century)
     for round in range(100):
@@ -33,7 +45,7 @@ for century in range(numCenturies):
         print "(10,10) neighbor: " + environment.getHealthiestNeighbor(testN,testN).getSummaryString()
     if (environment.getHealthiestNeighbor(testN+1,testN)):
         print "(11,10) neighbor: " + environment.getHealthiestNeighbor(testN+1,testN).getSummaryString()
-    #print environment.getHealthiestNeighbor(10,10).getSummaryString() + "\t\t" + environment.getHealthiestNeighbor(11,10).getSummaryString() + "\n"
+
     environment.trainCycle()
     cnt = environment.getBehaviors()
 
@@ -53,12 +65,16 @@ for century in range(numCenturies):
         print "(10,10) neighbor: " + environment.getHealthiestNeighbor(testN,testN).getSummaryString()
     if (environment.getHealthiestNeighbor(testN+1,testN)):
         print "(11,10) neighbor: " + environment.getHealthiestNeighbor(testN+1,testN).getSummaryString()
-    #print environment.getHealthiestNeighbor(10,10).getSummaryString() + "\t\t" + environment.getHealthiestNeighbor(11,10).getSummaryString() + "\n"
 
     print cnt.most_common(10)
     print cnt['00011011 00011011']
     print cnt['00100111 00100111']
 
+'''
+function which creates a CSV file once the program is complete
+the CSV file creates columns for each behavior and the number of
+occurs based on the century
+'''
 def createCSV():
     lastCenturyBehaviors = cntArray[numCenturies-1].most_common(10)
 
@@ -89,7 +105,6 @@ def createCSV():
             for i in csvMatrix:
                 writer.writerow(csvMatrix[count])
                 count = count + 1
-    #temporarily return list of behaviors for image
-    #return behaviors
 
+#call to the createCSV function
 createCSV()
