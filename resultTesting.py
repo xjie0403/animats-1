@@ -6,10 +6,16 @@ environment = Environment()
 createImage = CreateImage()
 
 environment.trainPerfectBlock(6,10,6,10,1)
-environment.trainPerfectBlock(26,30,26,30,2)
+
+#environment.trainPerfectBlock(26,30,26,30,2)
+#environment.trainPerfectBlock(56,60,56,60,2)
+
+#move black up
+environment.trainPerfectBlock(21,25,21,25,2)
+
 testN = 9
 cntArray = []
-numCenturies = 200
+numCenturies = 500
 
 def calculateWhenToSaveImage(centuries):
     #change the number of images here!
